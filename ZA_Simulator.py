@@ -21,7 +21,7 @@ st.set_page_config(
     menu_items={
         'Get Help': 'https://www.linkedin.com/in/frank-mollard/',
         'Report a bug': "https://www.linkedin.com/in/frank-mollard/",
-        'About': "Diese App dient der Simulation von Jäger Beute Schemen. by Frank Mollard"
+        'About': "Diese App dient der Simulation von Jäger Beute Schemen.\nby Frank Mollard"
     }
 )
 
