@@ -257,10 +257,12 @@ def trajektorie(mG, iC, percJaeger, percBeute, **kwargs):
         W.append(np.where(np.reshape(Z0, shape=(-1)) == 0)[0].shape[0]/(height*width))
         J.append(np.where(np.reshape(Z0, shape=(-1)) == -1)[0].shape[0]/(height*width))
         B.append(np.where(np.reshape(Z0, shape=(-1)) == 1)[0].shape[0]/(height*width))
-        
+
+        persistIter = iterationen / 100
+        if iterations % persistIter == 0:
+            trajektorie.append(Z0)
 
         if iterations % 100 == 0:
-            trajektorie.append(Z0)
             progress = (iterations + 100) / iterationen
             progress_bar.progress(progress)
             status_text.write(f"Simulation: {iterations + 100} / {iterationen}")
