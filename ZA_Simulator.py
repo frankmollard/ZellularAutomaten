@@ -121,7 +121,7 @@ with st.sidebar.form("simulation_form"):
        "Wenn kein Futter, um welchen Faktor erhöht\nsich die Sterblichkeit (1=keine Erhöhung)",
        options=list(np.linspace(1, 10, 91).astype(np.float16)),
        value=3,
-       help="Um welchen Faktor erhöht sich die Wahrscheinlichkeit, wenn kein Futter mehr da ist?\n Bei Beutetieren Wiese bei Jägern Beutetiere"
+       help="Um welchen Faktor erhöht sich die Wahrscheinlichkeit zu sterben, wenn kein Futter mehr da ist?\n Bei Beutetieren, wenn Wiese fehlt bei Jägern wenn Beutetiere fehlen."
     )   
 
 def clear_Q():
