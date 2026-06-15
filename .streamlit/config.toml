@@ -22,7 +22,7 @@ linkColor = "#049531"
 [theme.sidebar]
 
 # Primary accent color.
-primaryColor = "#049531"
+primaryColor = "#004D92"
 
 # Background color of the app.
 backgroundColor = "#f6f6f6"
@@ -34,4 +34,4 @@ secondaryBackgroundColor = "white"
 textColor = "black"
 
 # Color used for all links.
-linkColor = "#049531"
+linkColor = "#004D92"
