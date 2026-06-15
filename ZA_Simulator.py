@@ -90,7 +90,7 @@ with st.sidebar.form("simulation_form"):
        "Wieviele Raubtiere müssen für\neine Geburt im Umfels sein\nund keine Beute",
        options=list(np.linspace(1, 8, 8).astype(np.int8)),
        value=3,
-       "Wenn keine Beutetiere in der Nähe sind und stören, und mindestens X Jäger da sind\nmindestens natürlich einer, aber ggf. auch mehr, die Wache stehen, dann kann ein Jäger geboren werden."
+       help="Wenn keine Beutetiere in der Nähe sind und stören, und mindestens X Jäger da sind\nmindestens natürlich einer, aber ggf. auch mehr, die Wache stehen, dann kann ein Jäger geboren werden."
     )
     beuteProJaeger = st.select_slider(
        "Beute pro Jäger (für fressen und verteidigen)",
