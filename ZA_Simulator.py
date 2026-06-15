@@ -330,7 +330,7 @@ if st.session_state['authentication_status']:
                 progress_bar = st.progress(0)
                 status_text = st.empty()
                 try:
-                    TRAJECTORIE = trajektorie(
+                    st.session_state["TRAJECTORIE"] = trajektorie(
                         mG=matrixGroesse, 
                         iC=iterationCount, 
                         percJaeger=prozentJaeger, 
@@ -343,11 +343,12 @@ if st.session_state['authentication_status']:
                 except Exception as e:
                     st.error("Die Simulation ist fehlgeschlagen.")
                     st.exception(e)
-    
+                    
+            if "TRAJECTORIE" in st.session_state:
+                TRAJECTORIE = st.session_state["TRAJECTORIE"]
+            
             # Display the plots in Streamlit
             st.pyplot(attraktorPlot(TRAJECTORIE), use_container_width=False)
-            #length = int(TRAJECTORIE["Trajektorie"].shape[0]/100)
-            #TRAJECTORIE = TRAJECTORIE["Trajektorie"][::length]
             st.plotly_chart(SimulationPlot(TRAJECTORIE["Trajektorie"]))
             
         
