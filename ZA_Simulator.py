@@ -65,7 +65,7 @@ with st.sidebar.form("simulation_form"):
     )  
     iterationCount = st.select_slider(
        "Anzahl der Simulationsschritte",
-       options=list(np.linspace(1000, 500000, 500).astype(np.int32)),
+       options=list(np.linspace(1000, 2000000, 2000).astype(np.int32)),
        value=1000,
        help="Wieviele Änderungen sollen auf dem Feld durchgeführt werden?"
     )  
@@ -286,7 +286,7 @@ def trajektorie(mG, iC, percJaeger, percBeute, seedX: int = 0, **kwargs):
             J.append(np.where(np.reshape(Z0, shape=(-1)) == -1)[0].shape[0]/(height*width))
             B.append(np.where(np.reshape(Z0, shape=(-1)) == 1)[0].shape[0]/(height*width))
 
-        persistIter = iterationen / 50
+        persistIter = iterationen / 100
         if iterations % persistIter == 0: # genau 50 mal wird Z0 gespeichert
             trajektorie.append(Z0.copy())
 
@@ -334,7 +334,7 @@ def SimulationPlot(simTraject):
 
     # Improve layout
     fig.update_layout(
-        title="Trajektorie aufgeteilt auf 50 Zyklen",
+        title="Trajektorie aufgeteilt auf 100 Zyklen",
         coloraxis_showscale=True,
         coloraxis=dict(
             cmin=0,
