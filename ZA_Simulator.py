@@ -50,9 +50,12 @@ with st.sidebar.form("simulation_form"):
     
     
     """
-    submitted = st.form_submit_button("Simulieren")
-
-    seedNo = st.number_input("Insert a seed", min_value = 0, step=1, format="%d")
+    submitted = st.form_submit_button("Simulieren", help="Simulation begint mit Druck auf den 'Simulieren'-Button")
+    
+    seedNo = st.number_input(
+        "Insert a seed", min_value = 0, step=1, format="%d", 
+        help="Der Seed steuert die Zufallszahlen. Gleicher Seed bedeutet gleiche Simulation."
+    )
     
     matrixGroesse = st.select_slider(
        "Größe der Matrix",
@@ -242,7 +245,8 @@ def trajektorie(mG, iC, percJaeger, percBeute, seedX: int = 0, **kwargs):
     percBeute=percBeute/100
     percWiese=1-percJaeger-percBeute
 
-    np.randoom.seed(seedX)
+    np.random.seed(seedX)
+    
     z = np.random.choice([-1,0,1], size=(height, width), replace=True, p=[percJaeger, percWiese, percBeute])
     Z0 = z.copy()
     iterationen = iC
