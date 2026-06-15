@@ -317,7 +317,7 @@ def SimulationPlot(simTraject):
 
     # Improve layout
     fig.update_layout(
-        title="Trajektorie aufgeteilt auf 100 Zyklen",
+        title="Trajektorie aufgeteilt auf 50 Zyklen",
         coloraxis_showscale=True,
         coloraxis=dict(
             cmin=0,
