@@ -44,12 +44,14 @@ except Exception as e:
 st.title("Jäger Beute Simulation durch Zellularautomaten")
 
 #########SIDEBAR###########
-with st.sidebar:
+with st.sidebar.form("simulation_form"):
     st.image("vawiaial.png", width = 120)
     """
     
     
     """
+    submitted = st.form_submit_button("Simulieren")
+    
     matrixGroesse = st.select_slider(
        "Größe der Matrix",
        options=list(np.linspace(10, 50, 40).astype(np.int8)),
@@ -334,7 +336,7 @@ if st.session_state['authentication_status']:
     st.session_state["runs"] += 1 
     if st.session_state["runs"] >= 2:
         st.session_state["Q"] = 1
-        if st.button("Simulieren"):
+        if submitted:
             gc.collect()
             with st.status("Simulation Läuft...", expanded=True):
 
