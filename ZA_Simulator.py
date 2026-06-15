@@ -21,7 +21,7 @@ st.set_page_config(
     menu_items={
         'Get Help': 'https://www.linkedin.com/in/frank-mollard/',
         'Report a bug': "https://www.linkedin.com/in/frank-mollard/",
-        'About': "# Diese App dient der Simulation von Jäger Beute Schemen"
+        'About': "Diese App dient der Simulation von Jäger Beute Schemen. by Frank Mollard"
     }
 )
 
@@ -65,7 +65,7 @@ with st.sidebar.form("simulation_form"):
     )  
     iterationCount = st.select_slider(
        "Anzahl der Simulationsschritte",
-       options=list(np.linspace(1000, 2000000, 2000).astype(np.int32)),
+       options=list(np.linspace(1000, 5000000, 5000).astype(np.int32)),
        value=1000,
        help="Wieviele Änderungen sollen auf dem Feld durchgeführt werden?"
     )  
