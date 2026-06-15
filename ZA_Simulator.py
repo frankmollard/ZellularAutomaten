@@ -193,33 +193,32 @@ def bedingungen(seeds, test, gdB: int = 3, gdJ: int = 3, bpj: int = 1, ww: int =
         t[0] = 0 
         return t
 
+    if JägerImUmfeld.shape[0] != 0 and BeuteImUmfeld.shape[0] / JägerImUmfeld.shape[0] <= bpj and t[0] == -1 \
+    and BeuteImUmfeld.shape[0] != 0:#wandern
+        rnd = np.random.randint(0, BeuteImUmfeld.shape[0])
+        wandern = BeuteImUmfeld[rnd]+1#+1 weil erstes Element die Mitte ist
+        t[wandern] = -1
+        t[0] = 0
+            
+    elif JägerImUmfeld.shape[0] != 0 and BeuteImUmfeld.shape[0] / JägerImUmfeld.shape[0] > bpj and t[0] == -1:#sterben
+        t[0] = 0
+              
+    elif BeuteImUmfeld.shape[0] == 0 and JägerImUmfeld.shape[0] >= gdJ and t[0] == 0:#Jäger geboren
+        t[0] = -1
+            
+    elif JägerImUmfeld.shape[0] == 0 and BeuteImUmfeld.shape[0] >= gdB and t[0] == 0:#Beute geboren
+        t[0] = 1
+
+##########################################################################################################NEU
+    elif JägerImUmfeld.shape[0] != 0 and WieseImUmfeld.shape[0] >= ww and t[0] == 1:#Beute wandert
+        rnd = np.random.randint(0, WieseImUmfeld.shape[0])
+        wandern = WieseImUmfeld[rnd]+1#+1 weil erstes Element die Mitte ist
+        t[wandern] = 1
+        t[0] = 0
+
+##########################################################################################################Neu ENDE
     else:
-        if JägerImUmfeld.shape[0] != 0 and BeuteImUmfeld.shape[0] / JägerImUmfeld.shape[0] <= bpj and t[0] == -1 \
-        and BeuteImUmfeld.shape[0] != 0:#wandern
-            rnd = np.random.randint(0, BeuteImUmfeld.shape[0])
-            wandern = BeuteImUmfeld[rnd]+1#+1 weil erstes Element die Mitte ist
-            t[wandern] = -1
-            t[0] = 0
-                
-        elif JägerImUmfeld.shape[0] != 0 and BeuteImUmfeld.shape[0] / JägerImUmfeld.shape[0] > bpj and t[0] == -1:#sterben
-            t[0] = 0
-                  
-        elif BeuteImUmfeld.shape[0] == 0 and JägerImUmfeld.shape[0] >= gdJ and t[0] == 0:#Jäger geboren
-            t[0] = -1
-                
-        elif JägerImUmfeld.shape[0] == 0 and BeuteImUmfeld.shape[0] >= gdB and t[0] == 0:#Beute geboren
-            t[0] = 1
-
-    ##########################################################################################################NEU
-        elif JägerImUmfeld.shape[0] != 0 and WieseImUmfeld.shape[0] >= ww and t[0] == 1:#Beute wandert
-            rnd = np.random.randint(0, WieseImUmfeld.shape[0])
-            wandern = WieseImUmfeld[rnd]+1#+1 weil erstes Element die Mitte ist
-            t[wandern] = 1
-            t[0] = 0
-
-    ##########################################################################################################Neu ENDE
-        else:
-            t = t
+        t = t
         
     return t
 
