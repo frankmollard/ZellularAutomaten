@@ -269,8 +269,8 @@ def trajektorie(mG, iC, percJaeger, percBeute, **kwargs):
             J.append(np.where(np.reshape(Z0, shape=(-1)) == -1)[0].shape[0]/(height*width))
             B.append(np.where(np.reshape(Z0, shape=(-1)) == 1)[0].shape[0]/(height*width))
 
-        persistIter = iterationen / 100
-        if iterations % persistIter == 0: # genau 100 mal wird Z0 gespeichert
+        persistIter = iterationen / 50
+        if iterations % persistIter == 0: # genau 50 mal wird Z0 gespeichert
             trajektorie.append(Z0)
 
         if iterations % 100 == 0:
