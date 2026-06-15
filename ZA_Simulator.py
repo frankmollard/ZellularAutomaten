@@ -65,7 +65,7 @@ with st.sidebar.form("simulation_form"):
     )  
     iterationCount = st.select_slider(
        "Anzahl der Simulationsschritte",
-       options=list(np.linspace(1000, 150000, 150).astype(np.int32)),
+       options=list(np.linspace(1000, 500000, 500).astype(np.int32)),
        value=1000,
        help="Wieviele Änderungen sollen auf dem Feld durchgeführt werden?"
     )  
@@ -127,7 +127,7 @@ with st.sidebar.form("simulation_form"):
 def clear_Q():
     st.session_state["Q"] = 0
 
-@st.cache_data(show_spinner=False)
+
 def Moore_Umgebung_read(r,c, Zustand0):
     """
     r=row
@@ -150,7 +150,7 @@ def Moore_Umgebung_read(r,c, Zustand0):
     
     return [target, left, upLeft, up, upRight, right, lowRight, low, lowLeft]
 
-@st.cache_data(show_spinner=False)
+
 def bedingungen(seeds, test, gdB: int = 3, gdJ: int = 3, bpj: int = 1, ww: int = 3, randSprung: float = 0.1, randTot: float = 0.01, verhungernFaktor: float = 2):
     """
     gdX=wieviele müssen für Geburt im Moore Umfeld sein
@@ -222,7 +222,7 @@ def bedingungen(seeds, test, gdB: int = 3, gdJ: int = 3, bpj: int = 1, ww: int =
         
     return t
 
-@st.cache_data(show_spinner=False)
+
 def changeMoore(r, c, UmgebungsVektor, Zustand0):
 
     """
@@ -288,7 +288,7 @@ def trajektorie(mG, iC, percJaeger, percBeute, seedX: int = 0, **kwargs):
 
         persistIter = iterationen / 50
         if iterations % persistIter == 0: # genau 50 mal wird Z0 gespeichert
-            trajektorie.append(Z0)
+            trajektorie.append(Z0.copy())
 
         if iterations % 100 == 0:
             progress = (iterations + 100) / iterationen
@@ -297,7 +297,7 @@ def trajektorie(mG, iC, percJaeger, percBeute, seedX: int = 0, **kwargs):
     
     return {"Trajektorie": np.array(trajektorie), "Wiese": W, "Beute": B, "Jaeger": J}
 
-
+@st.cache_data(show_spinner=False)
 def attraktorPlot(wbj, iC):
     iterationen = iC
     persistIter = iterationen / 10
