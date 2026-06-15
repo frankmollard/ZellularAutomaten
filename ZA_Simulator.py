@@ -255,12 +255,15 @@ def trajektorie(mG, iC, percJaeger, percBeute, **kwargs):
             ), 
             Z0
         )
-        W.append(np.where(np.reshape(Z0, shape=(-1)) == 0)[0].shape[0]/(height*width))
-        J.append(np.where(np.reshape(Z0, shape=(-1)) == -1)[0].shape[0]/(height*width))
-        B.append(np.where(np.reshape(Z0, shape=(-1)) == 1)[0].shape[0]/(height*width))
+
+        persistIter = iterationen / 1000
+        if iterations % persistIter == 0: # genau 1000 mal wird W, J, B gespeichert
+            W.append(np.where(np.reshape(Z0, shape=(-1)) == 0)[0].shape[0]/(height*width))
+            J.append(np.where(np.reshape(Z0, shape=(-1)) == -1)[0].shape[0]/(height*width))
+            B.append(np.where(np.reshape(Z0, shape=(-1)) == 1)[0].shape[0]/(height*width))
 
         persistIter = iterationen / 100
-        if iterations % persistIter == 0:
+        if iterations % persistIter == 0: # genau 100 mal wird Z0 gespeichert
             trajektorie.append(Z0)
 
         if iterations % 100 == 0:
@@ -271,20 +274,24 @@ def trajektorie(mG, iC, percJaeger, percBeute, **kwargs):
     return {"Trajektorie": np.array(trajektorie), "Wiese": W, "Beute": B, "Jaeger": J}
 
 
-def attraktorPlot(wbj):
-    fig, ax = plt.subplots(figsize=(5, 2))
+def attraktorPlot(wbj, iC):
+    iterationen = iC
+    persistIter = iterationen / 10
+    xlabels = [ic for ic in range(iterationen + 1) if ic % persistIter == 0]
+    fig, ax = plt.subplots(figsize=(10, 4))
     ax.set_title("Attraktor")
     ax.plot(wbj["Wiese"], c="green", label= "Wiese")
     ax.plot(wbj["Beute"], c="orange", label= "Beute")
     ax.plot(wbj["Jaeger"], c="red", label= "Jäger")
+    ax.set_xticks([i*100 for i in list(range(len(xlabels)))])
+    ax.set_xticklabels(xlabels)
+    ax.tick_params(axis='x', labelrotation=45)
     ax.legend()
     return fig
 
 @st.cache_data(show_spinner=False)
 def SimulationPlot(simTraject):
 
-    #length = int(simTraject["Trajektorie"].shape[0]/100)
-    
     colorscale = [
         (0, "red"),     
         (0.5, "green"),  
@@ -302,7 +309,7 @@ def SimulationPlot(simTraject):
 
     # Improve layout
     fig.update_layout(
-        title="Jäger Beute population Bottom Up",
+        title="Trajektorie aufgeteilt auf 100 Zyklen",
         coloraxis_showscale=True,
         coloraxis=dict(
             cmin=0,
