@@ -56,7 +56,7 @@ with st.sidebar:
     )  
     iterationCount = st.select_slider(
        "Anzahl der Simulationsschritte",
-       options=list(np.linspace(1, 100000, 101).astype(np.int32)),
+       options=list(np.linspace(1000, 100000, 100).astype(np.int32)),
        value=1000
     )  
     prozentJaeger = st.select_slider(
@@ -257,9 +257,10 @@ def trajektorie(mG, iC, percJaeger, percBeute, **kwargs):
         W.append(np.where(np.reshape(Z0, shape=(-1)) == 0)[0].shape[0]/(height*width))
         J.append(np.where(np.reshape(Z0, shape=(-1)) == -1)[0].shape[0]/(height*width))
         B.append(np.where(np.reshape(Z0, shape=(-1)) == 1)[0].shape[0]/(height*width))
-        trajektorie.append(Z0)
+        
 
         if iterations % 100 == 0:
+            trajektorie.append(Z0)
             progress = (iterations + 100) / iterationen
             progress_bar.progress(progress)
             status_text.write(f"Simulation: {iterations + 100} / {iterationen}")
@@ -345,9 +346,9 @@ if st.session_state['authentication_status']:
     
             # Display the plots in Streamlit
             st.pyplot(attraktorPlot(TRAJECTORIE), use_container_width=False)
-            length = int(TRAJECTORIE["Trajektorie"].shape[0]/100)
-            TRAJECTORIE = TRAJECTORIE["Trajektorie"][::length]
-            st.plotly_chart(SimulationPlot(TRAJECTORIE))
+            #length = int(TRAJECTORIE["Trajektorie"].shape[0]/100)
+            #TRAJECTORIE = TRAJECTORIE["Trajektorie"][::length]
+            st.plotly_chart(SimulationPlot(TRAJECTORIE["Trajektorie"]))
             
         
         with st.sidebar:
