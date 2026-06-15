@@ -44,7 +44,7 @@ st.title("Jäger Beute Simulation durch Zellularautomaten")
 
 #########SIDEBAR###########
 with st.sidebar:
-    st.image("https://softec.ris.uni-due.de/fileadmin/fileupload/www.softec.wiwi.uni-due.de/udesoftec/vawi.jpg", width = 50)
+    st.image("vawiaial.png", width = 50)
     """
     
     
