@@ -175,6 +175,14 @@ def bedingungen(seeds, test, gdB: int = 3, gdJ: int = 3, bpj: int = 1, ww: int =
         t[0] = 0    
         return t
 
+    #Verhungern
+    if BeuteImUmfeld.shape[0] == 0 and rt < verhungern_tod and t[0] == -1:
+        t[0] = 0 
+        return t
+    if WieseImUmfeld.shape[0] == 0 and rt < verhungern_tod and t[0] == 1:
+        t[0] = 0 
+        return t
+
     #random Sprung
     np.random.seed(seed=seeds)
     rs = np.random.rand(1,1)[0][0]
@@ -183,14 +191,6 @@ def bedingungen(seeds, test, gdB: int = 3, gdJ: int = 3, bpj: int = 1, ww: int =
         wandern = WieseImUmfeld[rnd]+1#+1 weil erstes Element die Mitte ist
         t[wandern] = t[0]
         t[0] = 0
-        return t
-
-    #Verhungern
-    if BeuteImUmfeld.shape[0] == 0 and rt < verhungern_tod and t[0] == -1:
-        t[0] = 0 
-        return t
-    if WieseImUmfeld.shape[0] == 0 and rt < verhungern_tod and t[0] == 1:
-        t[0] = 0 
         return t
 
     if JägerImUmfeld.shape[0] != 0 and BeuteImUmfeld.shape[0] / JägerImUmfeld.shape[0] <= bpj and t[0] == -1 \
