@@ -44,7 +44,7 @@ st.title("Jäger Beute Simulation durch Zellularautomaten")
 
 #########SIDEBAR###########
 with st.sidebar:
-    st.image("vawiaial.png", width = 200)
+    st.image("vawiaial.png", width = 120)
     """
     
     
