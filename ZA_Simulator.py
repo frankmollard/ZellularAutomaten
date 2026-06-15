@@ -346,12 +346,12 @@ if st.session_state['authentication_status']:
                     st.error("Die Simulation ist fehlgeschlagen.")
                     st.exception(e)
                     
-            if "TRAJECTORIE" in st.session_state:
-                TRAJECTORIE = st.session_state["TRAJECTORIE"]
-            
-            # Display the plots in Streamlit
-            st.pyplot(attraktorPlot(TRAJECTORIE), use_container_width=False)
-            st.plotly_chart(SimulationPlot(TRAJECTORIE["Trajektorie"]))
+        if "TRAJECTORIE" in st.session_state:
+            TRAJECTORIE = st.session_state["TRAJECTORIE"]
+        
+        # Display the plots in Streamlit
+        st.pyplot(attraktorPlot(TRAJECTORIE), use_container_width=False)
+        st.plotly_chart(SimulationPlot(TRAJECTORIE["Trajektorie"]))
             
         
         with st.sidebar:
