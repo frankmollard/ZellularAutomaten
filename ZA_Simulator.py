@@ -137,7 +137,7 @@ def Moore_Umgebung_read(r,c, Zustand0):
 @st.cache_data(show_spinner=False)
 def bedingungen(seeds, test, gdB: int = 3, gdJ: int = 3, bpj: int = 1, ww: int = 3, randSprung: float = 0.1, randTot: float = 0.01, verhungernFaktor: float = 2):
     """
-    gd=wieviele müssen für Geburt im Moore Umfeld sein
+    gdX=wieviele müssen für Geburt im Moore Umfeld sein
     bpj=beute pro jäger (für fressen und verteidigen)
     ww=wieviel Wiese muss für Wanderung da sein
     randSprung=Wahrscheinlichkeit für Zufallssprung
@@ -188,10 +188,10 @@ def bedingungen(seeds, test, gdB: int = 3, gdJ: int = 3, bpj: int = 1, ww: int =
         elif JägerImUmfeld.shape[0] != 0 and BeuteImUmfeld.shape[0] / JägerImUmfeld.shape[0] > bpj and t[0] == -1:#sterben
             t[0] = 0
                   
-        elif BeuteImUmfeld.shape[0] == 0 and JägerImUmfeld.shape[0] >= gd and t[0] == 0:#Jäger geboren
+        elif BeuteImUmfeld.shape[0] == 0 and JägerImUmfeld.shape[0] >= gdJ and t[0] == 0:#Jäger geboren
             t[0] = -1
                 
-        elif JägerImUmfeld.shape[0] == 0 and BeuteImUmfeld.shape[0] >= gd and t[0] == 0:#Beute geboren
+        elif JägerImUmfeld.shape[0] == 0 and BeuteImUmfeld.shape[0] >= gdB and t[0] == 0:#Beute geboren
             t[0] = 1
 
     ##########################################################################################################NEU
@@ -354,8 +354,8 @@ if st.session_state['authentication_status']:
                         iC=iterationCount, 
                         percJaeger=prozentJaeger, 
                         percBeute=prozentBeute, 
-                        gdB = geburtenBeute,
-                        gdJ = geburtenJaeger,
+                        B = geburtenBeute,
+                        J = geburtenJaeger,
                         bpj=beuteProJaeger, 
                         randSprung=randomSprung/100, 
                         randTot=int(randomTot)/100, 
