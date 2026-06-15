@@ -87,16 +87,16 @@ with st.sidebar:
     randomSprung = st.select_slider(
        "Wahrscheinlichkeit für zufälligen Sprung",
        options=list(np.linspace(0, 100, 11).astype(np.int8)),
-       value=10
+       value=20
     )
     randomTot = st.select_slider(
        "Wahrscheinlichkeit für zufälliges Sterben",
        options=list(np.linspace(0, 100, 101).astype(np.int8)),
-       value=1
+       value=20
     )   
     verhungerungsFaktor = st.select_slider(
        "Wenn kein Futter, um welchen Faktor erhöht\nsich die Sterblichkeit (1=keine Erhöhung)",
-       options=list(np.linspace(1, 100, 100).astype(np.int16)),
+       options=list(np.linspace(1, 10, 91).astype(np.float16)),
        value=3
     )   
 
@@ -127,9 +127,7 @@ def Moore_Umgebung_read(r,c, Zustand0):
     return [target, left, upLeft, up, upRight, right, lowRight, low, lowLeft]
 
 @st.cache_data(show_spinner=False)
-def bedingungen(seeds, test, gd: int = 3, bpj: int = 1, ww: int = 3, randSprung: float = 0.1, 
-                randTot: float = 0.01, verhungernFaktor: float = 2
-               ):
+def bedingungen(seeds, test, gd: int = 3, bpj: int = 1, ww: int = 3, randSprung: float = 0.1, randTot: float = 0.01, verhungernFaktor: float = 2):
     """
     gd=wieviele müssen für Geburt im Moore Umfeld sein
     bpj=beute pro jäger (für fressen und verteidigen)
@@ -338,7 +336,7 @@ if st.session_state['authentication_status']:
                     percBeute=prozentBeute, 
                     bpj=beuteProJaeger, 
                     randSprung=randomSprung/100, 
-                    randTot=randomTot/100, 
+                    randTot=int(randomTot)/100, 
                     verhungernFaktor=verhungerungsFaktor
                 )
     
