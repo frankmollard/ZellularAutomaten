@@ -65,52 +65,62 @@ with st.sidebar.form("simulation_form"):
     iterationCount = st.select_slider(
        "Anzahl der Simulationsschritte",
        options=list(np.linspace(1000, 200000, 200).astype(np.int32)),
-       value=1000
+       value=1000,
+       help="Wieviele Änderungen sollen auf dem Feld durchgeführt werden?"
     )  
     prozentJaeger = st.select_slider(
        "Anteil Jäger zu Beginn in %",
        options=list(np.linspace(1, 100, 101).astype(np.int8)),
-       value=15
+       value=15,
+       help="Anteil der Jäger auf dem Feld zu Beginn der Simulation.\n100 - Jäger - Beute = Wiese"
     )  
     prozentBeute = st.select_slider(
        "Anteil Beute zu Beginn in %",
        options=list(np.linspace(1, 100, 101).astype(np.int8)),
-       value=15
+       value=15,
+       help="Anteil der Beutetiere auf dem Feld zu Beginn der Simulation.\n100 - Jäger - Beute = Wiese"
     )  
     geburtenBeute = st.select_slider(
        "Wieviele Beutetiere müssen für\neine Geburt im Umfels sein\nund keine Jäger",
        options=list(np.linspace(1, 8, 8).astype(np.int8)),
-       value=3
+       value=3,
+       help="Wenn keine Jäger in der Nähe sind und stören, und mindestens X Beutetiere da sind\nmindestens natürlich eins, aber ggf. auch mehr, die Wache stehen, dann kann ein Beutetier geboren werden."
     )
     geburtenJaeger = st.select_slider(
        "Wieviele Raubtiere müssen für\neine Geburt im Umfels sein\nund keine Beute",
        options=list(np.linspace(1, 8, 8).astype(np.int8)),
-       value=3
+       value=3,
+       "Wenn keine Beutetiere in der Nähe sind und stören, und mindestens X Jäger da sind\nmindestens natürlich einer, aber ggf. auch mehr, die Wache stehen, dann kann ein Jäger geboren werden."
     )
     beuteProJaeger = st.select_slider(
        "Beute pro Jäger (für fressen und verteidigen)",
        options=list(np.linspace(0, 2, 21).astype(np.float16)),
-       value=1
+       value=1,
+       help="Bis zu welchem prozentualen Anteil Beute pro Jäger kann sich ein Jäger gegen Beute durchsetzen.\n Beispiel: Wenn der Anteil bei 1 liegt, also z.B. 2x Beute und 2xJäger im Umfeld dann gewinnt der Jäger und tötet die Beute.\n ansonsten ist es andersherum."
     )
     wieseWandern = st.select_slider(
-       "Wieviel Wiese muss für Wanderung da sein?",
+       "Wieviel Wiese muss für Beuteanderung da sein?",
        options=list(np.linspace(1, 8, 8).astype(np.int8)),
-       value=3
+       value=3,
+       help="Wieviele Elemente im Umfeld müssen freie Wiese sein, um eine Wanderung der Beute in das Moor Umfeld zu ermöglichen?"
     )
     randomSprung = st.select_slider(
        "Wahrscheinlichkeit für zufälligen Sprung",
        options=list(np.linspace(0, 100, 11).astype(np.int8)),
-       value=20
+       value=20,
+       help="Wie hoch ist die Wahrscheinlichkeit, dass ein Tier, egal welches in das Moore Umfeld wandert?"
     )
     randomTot = st.select_slider(
        "Wahrscheinlichkeit für zufälliges Sterben",
        options=list(np.linspace(0, 100, 101).astype(np.int8)),
-       value=20
+       value=20,
+       help="Wahrscheinlichkeit für zufälligen Tod eines Tieres."
     )   
     verhungerungsFaktor = st.select_slider(
        "Wenn kein Futter, um welchen Faktor erhöht\nsich die Sterblichkeit (1=keine Erhöhung)",
        options=list(np.linspace(1, 10, 91).astype(np.float16)),
-       value=3
+       value=3,
+       help="Um welchen Faktor erhöht sich die Wahrscheinlichkeit, wenn kein Futter mehr da ist?\n Bei Beutetieren Wiese bei Jägern Beutetiere"
     )   
 
 def clear_Q():
@@ -365,6 +375,7 @@ if st.session_state['authentication_status']:
                         gdB = geburtenBeute,
                         gdJ = geburtenJaeger,
                         bpj=beuteProJaeger, 
+                        ww = wieseWandern,
                         randSprung=randomSprung/100, 
                         randTot=int(randomTot)/100, 
                         verhungernFaktor=verhungerungsFaktor
