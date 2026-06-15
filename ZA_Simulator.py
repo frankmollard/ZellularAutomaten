@@ -60,7 +60,8 @@ with st.sidebar.form("simulation_form"):
     matrixGroesse = st.select_slider(
        "Größe der Matrix",
        options=list(np.linspace(10, 50, 40).astype(np.int8)),
-       value=30
+       value=30,
+       help="Größer der symmetrischen Matrix wählen."
     )  
     iterationCount = st.select_slider(
        "Anzahl der Simulationsschritte",
