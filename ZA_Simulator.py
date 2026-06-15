@@ -355,6 +355,7 @@ if st.session_state['authentication_status']:
             authenticator.logout()
     
     else:
+        st.error("rerun")
         st.rerun()
     
 elif st.session_state['authentication_status'] is False:
