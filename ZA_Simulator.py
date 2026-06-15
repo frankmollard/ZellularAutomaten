@@ -288,6 +288,7 @@ def attraktorPlot(wbj, iC):
     ax.set_xticks([i*100 for i in list(range(len(xlabels)))])
     ax.set_xticklabels(xlabels)
     ax.tick_params(axis='x', labelrotation=45)
+    ax.spines["top"].set_visible(False); ax.spines['right'].set_visible(False)
     ax.legend()
     return fig
 
