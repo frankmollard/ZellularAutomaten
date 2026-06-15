@@ -123,6 +123,10 @@ with st.sidebar.form("simulation_form"):
        value=3,
        help="Um welchen Faktor erhöht sich die Wahrscheinlichkeit zu sterben, wenn kein Futter mehr da ist?\n Bei Beutetieren, wenn Wiese fehlt bei Jägern wenn Beutetiere fehlen."
     )   
+    codeSwitch = st.selectbox(
+        "Sterben oder Rennen",
+        ("Sterben -> Rennen", "Rennen -> Sterben"),
+    )
 
 def clear_Q():
     st.session_state["Q"] = 0
@@ -151,7 +155,7 @@ def Moore_Umgebung_read(r,c, Zustand0):
     return [target, left, upLeft, up, upRight, right, lowRight, low, lowLeft]
 
 
-def bedingungen(seeds, test, gdB: int = 3, gdJ: int = 3, bpj: int = 1, ww: int = 3, randSprung: float = 0.1, randTot: float = 0.01, verhungernFaktor: float = 2):
+def bedingungen(seeds, test, gdB: int = 3, gdJ: int = 3, bpj: int = 1, ww: int = 3, randSprung: float = 0.1, randTot: float = 0.01, verhungernFaktor: float = 2, reihenfolge: str = "Sterben -> Rennen"):
     """
     gdX=wieviele müssen für Geburt im Moore Umfeld sein
     bpj=beute pro jäger (für fressen und verteidigen)
@@ -175,23 +179,31 @@ def bedingungen(seeds, test, gdB: int = 3, gdJ: int = 3, bpj: int = 1, ww: int =
         t[0] = 0    
         return t
 
-    #Verhungern
-    if BeuteImUmfeld.shape[0] == 0 and rt < verhungern_tod and t[0] == -1:
-        t[0] = 0 
-        return t
-    if WieseImUmfeld.shape[0] == 0 and rt < verhungern_tod and t[0] == 1:
-        t[0] = 0 
-        return t
-
-    #random Sprung
-    np.random.seed(seed=seeds)
-    rs = np.random.rand(1,1)[0][0]
-    if WieseImUmfeld.shape[0] != 0 and rs < randSprung and t[0] != 0:
-        rnd = np.random.randint(0, WieseImUmfeld.shape[0])
-        wandern = WieseImUmfeld[rnd]+1#+1 weil erstes Element die Mitte ist
-        t[wandern] = t[0]
-        t[0] = 0
-        return t
+    if reihenfolge == "Sterben -> Rennen":
+        reihenfolge = [0,1]
+    else:
+        reihenfolge = [1,0]
+        
+    for abschnitt in reihenfolge:
+        if abschnitt == 0:
+            #Verhungern
+            if BeuteImUmfeld.shape[0] == 0 and rt < verhungern_tod and t[0] == -1:
+                t[0] = 0 
+                return t
+            if WieseImUmfeld.shape[0] == 0 and rt < verhungern_tod and t[0] == 1:
+                t[0] = 0 
+                return t
+    
+        if abschnitt == 1:
+            #random Sprung
+            np.random.seed(seed=seeds)
+            rs = np.random.rand(1,1)[0][0]
+            if WieseImUmfeld.shape[0] != 0 and rs < randSprung and t[0] != 0:
+                rnd = np.random.randint(0, WieseImUmfeld.shape[0])
+                wandern = WieseImUmfeld[rnd]+1#+1 weil erstes Element die Mitte ist
+                t[wandern] = t[0]
+                t[0] = 0
+                return t
 
     if JägerImUmfeld.shape[0] != 0 and BeuteImUmfeld.shape[0] / JägerImUmfeld.shape[0] <= bpj and t[0] == -1 \
     and BeuteImUmfeld.shape[0] != 0:#wandern
@@ -378,7 +390,8 @@ if st.session_state['authentication_status']:
                         ww = wieseWandern,
                         randSprung=randomSprung/100, 
                         randTot=int(randomTot)/100, 
-                        verhungernFaktor=verhungerungsFaktor
+                        verhungernFaktor=verhungerungsFaktor,
+                        reihenfolge = codeSwitch,
                     )
                 except Exception as e:
                     st.error("Die Simulation ist fehlgeschlagen.")
