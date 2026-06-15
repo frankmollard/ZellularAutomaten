@@ -347,11 +347,9 @@ if st.session_state['authentication_status']:
                     st.exception(e)
                     
         if "TRAJECTORIE" in st.session_state:
-            TRAJECTORIE = st.session_state["TRAJECTORIE"]
-        
-        # Display the plots in Streamlit
-        st.pyplot(attraktorPlot(TRAJECTORIE), use_container_width=False)
-        st.plotly_chart(SimulationPlot(TRAJECTORIE["Trajektorie"]))
+            # Display the plots in Streamlit
+            st.pyplot(attraktorPlot(st.session_state["TRAJECTORIE"]), use_container_width=False)
+            st.plotly_chart(SimulationPlot(st.session_state["TRAJECTORIE"]["Trajektorie"]))
             
         
         with st.sidebar:
