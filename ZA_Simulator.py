@@ -5,6 +5,7 @@ import plotly.graph_objects as go
 import pandas as pd
 import plotly.express as px
 from matplotlib import pyplot as plt
+import gc
 
 import yaml
 from yaml.loader import SafeLoader
@@ -327,6 +328,7 @@ if st.session_state['authentication_status']:
     if st.session_state["runs"] >= 2:
         st.session_state["Q"] = 1
         if st.button("Simulieren"):
+            gc.collect()
             with st.status("Simulation Läuft...", expanded=True):
 
                 progress_bar = st.progress(0)
