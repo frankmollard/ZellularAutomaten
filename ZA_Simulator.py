@@ -268,7 +268,7 @@ def trajektorie(mG, iC, percJaeger, percBeute, **kwargs):
 
 
 def attraktorPlot(wbj):
-    fig, ax = plt.subplots()
+    fig, ax = plt.subplots(figsize=(5, 2))
     ax.set_title("Attraktor")
     ax.plot(wbj["Wiese"], c="green", label= "Wiese")
     ax.plot(wbj["Beute"], c="orange", label= "Beute")
@@ -279,7 +279,7 @@ def attraktorPlot(wbj):
 @st.cache_data(show_spinner=False)
 def SimulationPlot(simTraject):
 
-    length = int(simTraject["Trajektorie"].shape[0]/100)
+    #length = int(simTraject["Trajektorie"].shape[0]/100)
     
     colorscale = [
         (0, "red"),     
@@ -288,7 +288,7 @@ def SimulationPlot(simTraject):
     ]
 
     fig = px.imshow(
-        (simTraject["Trajektorie"][::length]+1)/2,
+        (simTraject+1)/2,#damit aus -1,0,1 -> 0,0.51 wird
         animation_frame=0,  # first axis is the frame index
         binary_string=False,
         labels=dict(animation_frame="Frame"),
@@ -341,8 +341,11 @@ if st.session_state['authentication_status']:
                 )
     
             # Display the plots in Streamlit
+            st.pyplot(attraktorPlot(TRAJECTORIE), use_container_width=False)
+            length = int(TRAJECTORIE["Trajektorie"].shape[0]/100)
+            TRAJECTORIE = TRAJECTORIE["Trajektorie"][::length]
             st.plotly_chart(SimulationPlot(TRAJECTORIE))
-            st.pyplot(attraktorPlot(TRAJECTORIE))
+            
         
         with st.sidebar:
             authenticator.logout()
