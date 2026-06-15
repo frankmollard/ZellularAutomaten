@@ -328,17 +328,20 @@ if st.session_state['authentication_status']:
 
                 progress_bar = st.progress(0)
                 status_text = st.empty()
-                
-                TRAJECTORIE = trajektorie(
-                    mG=matrixGroesse, 
-                    iC=iterationCount, 
-                    percJaeger=prozentJaeger, 
-                    percBeute=prozentBeute, 
-                    bpj=beuteProJaeger, 
-                    randSprung=randomSprung/100, 
-                    randTot=int(randomTot)/100, 
-                    verhungernFaktor=verhungerungsFaktor
-                )
+                try:
+                    TRAJECTORIE = trajektorie(
+                        mG=matrixGroesse, 
+                        iC=iterationCount, 
+                        percJaeger=prozentJaeger, 
+                        percBeute=prozentBeute, 
+                        bpj=beuteProJaeger, 
+                        randSprung=randomSprung/100, 
+                        randTot=int(randomTot)/100, 
+                        verhungernFaktor=verhungerungsFaktor
+                    )
+                except Exception as e:
+                    st.error("Die Simulation ist fehlgeschlagen.")
+                    st.exception(e)
     
             # Display the plots in Streamlit
             st.pyplot(attraktorPlot(TRAJECTORIE), use_container_width=False)
