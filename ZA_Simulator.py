@@ -72,8 +72,13 @@ with st.sidebar.form("simulation_form"):
        options=list(np.linspace(1, 100, 101).astype(np.int8)),
        value=15
     )  
-    geburten = st.select_slider(
-       "Wieviele Tiere müssen für\neine Geburt im Umfels sein",
+    geburtenBeute = st.select_slider(
+       "Wieviele Beutetiere müssen für\neine Geburt im Umfels sein\nund keine Jäger",
+       options=list(np.linspace(1, 8, 8).astype(np.int8)),
+       value=3
+    )
+    geburtenJaeger = st.select_slider(
+       "Wieviele Raubtiere müssen für\neine Geburt im Umfels sein\nund keine Beute",
        options=list(np.linspace(1, 8, 8).astype(np.int8)),
        value=3
     )
@@ -130,7 +135,7 @@ def Moore_Umgebung_read(r,c, Zustand0):
     return [target, left, upLeft, up, upRight, right, lowRight, low, lowLeft]
 
 @st.cache_data(show_spinner=False)
-def bedingungen(seeds, test, gd: int = 3, bpj: int = 1, ww: int = 3, randSprung: float = 0.1, randTot: float = 0.01, verhungernFaktor: float = 2):
+def bedingungen(seeds, test, gdB: int = 3, gdJ: int = 3, bpj: int = 1, ww: int = 3, randSprung: float = 0.1, randTot: float = 0.01, verhungernFaktor: float = 2):
     """
     gd=wieviele müssen für Geburt im Moore Umfeld sein
     bpj=beute pro jäger (für fressen und verteidigen)
@@ -349,6 +354,8 @@ if st.session_state['authentication_status']:
                         iC=iterationCount, 
                         percJaeger=prozentJaeger, 
                         percBeute=prozentBeute, 
+                        gdB = geburtenBeute,
+                        gdJ = geburtenJaeger,
                         bpj=beuteProJaeger, 
                         randSprung=randomSprung/100, 
                         randTot=int(randomTot)/100, 
