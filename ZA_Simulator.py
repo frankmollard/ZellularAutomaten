@@ -51,6 +51,8 @@ with st.sidebar.form("simulation_form"):
     
     """
     submitted = st.form_submit_button("Simulieren")
+
+    seedNo = st.number_input("Insert a seed", min_value = 0, step=1, format="%d")
     
     matrixGroesse = st.select_slider(
        "Größe der Matrix",
@@ -232,14 +234,15 @@ def changeMoore(r, c, UmgebungsVektor, Zustand0):
     return Zn
 
 
-def trajektorie(mG, iC, percJaeger, percBeute, **kwargs):
+def trajektorie(mG, iC, percJaeger, percBeute, seedX: int = 0, **kwargs):
     
     width=int(mG)
     height=width
     percJaeger=percJaeger/100
     percBeute=percBeute/100
     percWiese=1-percJaeger-percBeute
-    
+
+    np.randoom.seed(seedX)
     z = np.random.choice([-1,0,1], size=(height, width), replace=True, p=[percJaeger, percWiese, percBeute])
     Z0 = z.copy()
     iterationen = iC
@@ -256,7 +259,7 @@ def trajektorie(mG, iC, percJaeger, percBeute, **kwargs):
             r, 
             c, 
             bedingungen(
-                iterations, 
+                iterations + seedX, 
                 Moore_Umgebung_read(r, c, Z0), 
                 **kwargs
             ), 
@@ -354,6 +357,7 @@ if st.session_state['authentication_status']:
                         iC=iterationCount, 
                         percJaeger=prozentJaeger, 
                         percBeute=prozentBeute, 
+                        seedX = seedNo,
                         gdB = geburtenBeute,
                         gdJ = geburtenJaeger,
                         bpj=beuteProJaeger, 
