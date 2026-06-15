@@ -5,7 +5,7 @@
 base = "light"
 
 # Primary accent color.
-primaryColor = "#049531"
+primaryColor = "#004D92"
 
 # Background color of the app.
 backgroundColor = "white"
@@ -17,7 +17,7 @@ secondaryBackgroundColor = "#f6f6f6"
 textColor = "black"
 
 # Color used for all links.
-linkColor = "#049531"
+linkColor = "#004D92"
 
 [theme.sidebar]
 
