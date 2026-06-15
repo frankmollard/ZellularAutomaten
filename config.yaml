@@ -1,0 +1,23 @@
+---
+credentials:
+  usernames:
+    Fmoll:
+      email: f.mollard@aol.com
+      name: Frank Mollard
+      password: abc
+    ckluever:
+      email: christina.kluever@uni-due.de
+      name: Christian Kluever
+      password: AIAL
+    student:
+      email: xyz@uni-due.de
+      name: Student
+      password: AIAL
+cookie:
+  expiry_days: 0
+  key: random_signature_key # Must be string
+  name: random_cookie_name
+preauthorized:
+  emails:
+  - f.mollard@aol.com
+...
