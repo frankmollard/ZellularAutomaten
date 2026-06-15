@@ -65,7 +65,7 @@ with st.sidebar.form("simulation_form"):
     )  
     iterationCount = st.select_slider(
        "Anzahl der Simulationsschritte",
-       options=list(np.linspace(1000, 200000, 200).astype(np.int32)),
+       options=list(np.linspace(1000, 150000, 150).astype(np.int32)),
        value=1000,
        help="Wieviele Änderungen sollen auf dem Feld durchgeführt werden?"
     )  
