@@ -56,7 +56,7 @@ with st.sidebar:
     )  
     iterationCount = st.select_slider(
        "Anzahl der Simulationsschritte",
-       options=list(np.linspace(1000, 100000, 100).astype(np.int32)),
+       options=list(np.linspace(1000, 200000, 200).astype(np.int32)),
        value=1000
     )  
     prozentJaeger = st.select_slider(
