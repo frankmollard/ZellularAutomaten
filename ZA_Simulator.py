@@ -402,7 +402,70 @@ if st.session_state['authentication_status']:
             # Display the plots in Streamlit
             st.pyplot(attraktorPlot(st.session_state["TRAJECTORIE"], iterationCount), use_container_width=False)
             st.plotly_chart(SimulationPlot(st.session_state["TRAJECTORIE"]["Trajektorie"]))
-            
+
+        if "matrixGroesse t-1" in st.session_state:
+            letzteEingabe = pd.DataFrame(
+                {
+                    "Parameter t-1": [
+                        st.session_state["matrixGroesse t-1"],
+                        st.session_state["seedNo t-1"],
+                        st.session_state["iterationCount t-1"], 
+                        st.session_state["prozentJaeger t-1"],
+                        st.session_state["prozentBeute t-1"],
+                        st.session_state["geburtenBeute t-1"],
+                        st.session_state["geburtenJaeger t-1"],
+                        st.session_state["beuteProJaeger t-1"],
+                        st.session_state["randomSprung t-1"],
+                        st.session_state["randomTot t-1"],
+                        st.session_state["verhungerungsFaktor t-1"],
+                        st.session_state["codeSwitch t-1"]
+                    ],
+                    "Parameter t": [
+                        matrixGroesse,
+                        seedNo,
+                        iterationCount,
+                        prozentJaeger,
+                        prozentBeute,
+                        geburtenBeute,
+                        geburtenJaeger,
+                        beuteProJaeger,
+                        randomSprung,
+                        randomTot,
+                        verhungerungsFaktor,
+                        codeSwitch
+                    ]
+                },
+                index=[
+                    "Matrix größe",
+                    "Seed",
+                    "Iterationen",
+                    "Start % Jäger",
+                    "Start % Beute",
+                    "Geburten Beute",
+                    "Geburten Jäger",
+                    "Beute pro Jäger",
+                    "Zufall Sprung",
+                    "Zufall Tot",
+                    "Verhungern Faktor",
+                    "Sterben oder Rennen"
+                ]
+            )
+
+            st.text("Letzte und aktuelle Eingabe")
+            st.table(letzteEingabe)
+
+        st.session_state["matrixGroesse t-1"] = matrixGroesse
+        st.session_state["iterationCount t-1"] = iterationCount
+        st.session_state["prozentJaeger t-1"] = prozentJaeger
+        st.session_state["prozentBeute t-1"] = prozentBeute
+        st.session_state["seedNo t-1"] = seedNo
+        st.session_state["geburtenBeute t-1"] = geburtenBeute
+        st.session_state["geburtenJaeger t-1"] = geburtenJaeger
+        st.session_state["beuteProJaeger t-1"] = beuteProJaeger
+        st.session_state["randomSprung t-1"] = randomSprung
+        st.session_state["randomTot t-1"] = randomTot
+        st.session_state["verhungerungsFaktor t-1"] = verhungerungsFaktor
+        st.session_state["codeSwitch t-1"] = codeSwitch
         
         with st.sidebar:
             authenticator.logout()
