@@ -457,6 +457,7 @@ if st.session_state['authentication_status']:
             )
 
             st.text("Letzte und aktuelle Eingabe")
+            letzteEingabe = letzteEingabe.astype(str)
             st.table(letzteEingabe)
 
         st.session_state["matrixGroesse t-1"] = matrixGroesse
