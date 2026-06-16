@@ -103,7 +103,7 @@ with st.sidebar.form("simulation_form"):
        help="Bis zu welchem prozentualen Anteil Beute pro Jäger kann sich ein Jäger gegen Beute durchsetzen.\n Beispiel: Wenn der Anteil bei 1 liegt, also z.B. 2x Beute und 2xJäger im Umfeld dann gewinnt der Jäger und tötet die Beute.\n ansonsten ist es andersherum."
     )
     wieseWandern = st.select_slider(
-       "Wieviel Wiese muss für Beuteanderung da sein?",
+       "Wieviel Wiese muss für Beutewanderung da sein?",
        options=list(np.linspace(1, 8, 8).astype(np.int8)),
        value=3,
        help="Wieviele Elemente im Umfeld müssen freie Wiese sein, um eine Wanderung der Beute in das Moor Umfeld zu ermöglichen?"
