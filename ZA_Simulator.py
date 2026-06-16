@@ -380,6 +380,9 @@ if st.session_state["authentication_status"]:
     if st.session_state["runs"] >= 2:
         st.session_state["Q"] = 1
         if submitted:
+            if int(prozentJaeger) + int(prozentBeute) >= 100:
+                st.error(f"Jäger + Beute müssen zusammen < 100 % ergeben.\nJäger liegt bei {int(prozentJaeger)} und Beute bei {int(prozentBeute)}, also beide zusammen bei {int(prozentJaeger)+int(prozentBeute)}")
+                st.stop()
             gc.collect()
             with st.status("Simulation Läuft...", expanded=True):
 
