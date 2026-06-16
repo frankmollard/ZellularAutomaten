@@ -405,7 +405,7 @@ if st.session_state['authentication_status']:
                     
         if "TRAJECTORIE" in st.session_state:
             # Display the plots in Streamlit
-            st.pyplot(attraktorPlot(st.session_state["TRAJECTORIE"], iterationCount), use_container_width=False)
+            st.pyplot(attraktorPlot(st.session_state["TRAJECTORIE"], iterationCount), width="content")
             st.plotly_chart(SimulationPlot(st.session_state["TRAJECTORIE"]["Trajektorie"]))
 
         if "matrixGroesse t-1" in st.session_state:
