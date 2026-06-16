@@ -41,7 +41,10 @@ try:
 except Exception as e:
     st.error(e)
 
-st.title("Jäger Beute Simulation durch Zellularautomaten")
+st.markdown(
+    '<h3 style="font-size: 20px; color: #004D92;"><i>Jäger Beute Simulation durch Zellularautomaten</i></h3>',
+    unsafe_allow_html=True
+)
 
 #########SIDEBAR###########
 with st.sidebar.form("simulation_form"):
