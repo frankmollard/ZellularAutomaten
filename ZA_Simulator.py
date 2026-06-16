@@ -132,8 +132,8 @@ with st.sidebar.form("simulation_form"):
         help="Hierbei handelt es sich um die Reihenfolge der Bedingungen.\nEntweder wird erst gefragt, ob der zufällige Tod eintritt, wenn nicht, wird danach nochmal gefragt\nob zufällig gesprungen wird, oder umgekehrt.\nTheoretisch könnte ersteres dadurch begründet werden, dass der Tod ein Binäres Ereignis ist und darüber entscheided\nob überhaupt noch ein Sprung möglich ist. Andererseits könnte man argumentieren, dass die Bewegung das Tier noch etwas länger am leben hält."
     )
 
-def clear_Q():
-    st.session_state["Q"] = 0
+#def clear_Q():
+#    st.session_state["Q"] = 0
 
 
 def Moore_Umgebung_read(r,c, Zustand0):
@@ -373,7 +373,9 @@ def SimulationPlot(simTraject):
     return fig
 
 ##########START#################
-if st.session_state['authentication_status']:
+if st.session_state["authentication_status"]:
+    if "runs" not in st.session_state:
+        st.session_state["runs"] = 0
     st.session_state["runs"] += 1 
     if st.session_state["runs"] >= 2:
         st.session_state["Q"] = 1
@@ -480,17 +482,10 @@ if st.session_state['authentication_status']:
         st.error("rerun")
         st.rerun()
     
-elif st.session_state['authentication_status'] is False:
-    st.error('Falscher Username oder Passwort')
-elif st.session_state['authentication_status'] is None:
-    st.warning('Bitte Username und Passwort eingeben')
-    if 'runs' not in st.session_state:
-        st.session_state["runs"] = 0
-        st.session_state["text"] = ""
-    else:
-        st.session_state["runs"] = 0
-        st.session_state["text"] = ""
-    if 'Q' not in st.session_state:
-        st.session_state["Q"] = 0
-    else:
-        st.session_state["Q"] = 0
+elif st.session_state["authentication_status"] is False:
+    st.error("Falscher Username oder Passwort")
+elif st.session_state["authentication_status"] is None:
+    st.warning("Bitte Username und Passwort eingeben")
+    st.session_state["runs"] = 0
+    st.session_state["text"] = ""
+    st.session_state["Q"] = 0
