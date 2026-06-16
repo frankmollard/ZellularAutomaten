@@ -339,8 +339,10 @@ def SimulationPlot(simTraject):
         (1, "orange")     
     ]
 
+    simTraject = (simTraject+1)/2 #damit aus -1,0,1 -> 0,0.51 wird
+    simTraject = simTraject[1:-1,1:-1]
     fig = px.imshow(
-        (simTraject+1)/2,#damit aus -1,0,1 -> 0,0.51 wird
+        simTraject,
         animation_frame=0,  # first axis is the frame index
         binary_string=False,
         labels=dict(animation_frame="Frame"),
