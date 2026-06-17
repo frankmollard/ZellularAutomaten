@@ -228,7 +228,7 @@ def bedingungen(
         t[0] = 0
 
     elif JägerImUmfeld.shape[0] == 0 and BeuteImUmfeld.shape[0] == 1 and t[0] == -1 and eG == "ja": #Einzelgänger?
-        wandern = BeuteImUmfeld[0]
+        wandern = BeuteImUmfeld[0]+1
         t[wandern] = -1
         t[0] = 0    
             
