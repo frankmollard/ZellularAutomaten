@@ -13,7 +13,7 @@ from yaml.loader import SafeLoader
 import warnings 
 warnings.filterwarnings("ignore")
 
-maxIter = 5000000 #Es muss mit maxIter gearbeit werden, da sonst immer wieder andere zufallszahlen kommen würden
+maxIter = 10000000 #Es muss mit maxIter gearbeit werden, da sonst immer wieder andere zufallszahlen kommen würden
 
 st.set_page_config(
     page_title="Zellularautomaten",
