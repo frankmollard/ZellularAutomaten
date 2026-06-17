@@ -107,7 +107,7 @@ with st.sidebar.form("simulation_form"):
     einzelGaenger = st.selectbox(
         "Sind Jäger auch Einzelgänger?",
         ("nein", "ja"),
-        help="Wenn einem Jäger ein einzelnes Beutetier begegnet und keine Weiteren Jäger im Moore Umfeld sind, dann Frisst der Jäger die Beute.\ndefault=nein"
+        help="Wenn einem Jäger ein einzelnes Beutetier begegnet und keine weiteren Jäger im Moore Umfeld sind, dann frisst der Jäger die Beute.\ndefault=nein"
     )
     wieseWandern = st.select_slider(
        "Wieviel Wiese muss für Beutewanderung da sein?",
