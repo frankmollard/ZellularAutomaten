@@ -425,7 +425,7 @@ if st.session_state["authentication_status"]:
                         st.session_state["geburtenBeute t-1"],
                         st.session_state["geburtenJaeger t-1"],
                         st.session_state["beuteProJaeger t-1"],
-                        st.session_state["wieseWandern t-1"]
+                        st.session_state["wieseWandern t-1"],
                         st.session_state["randomSprung t-1"],
                         st.session_state["randomTot t-1"],
                         st.session_state["verhungerungsFaktor t-1"],
