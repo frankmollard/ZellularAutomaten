@@ -63,19 +63,16 @@ with st.sidebar.form("simulation_form"):
         "Insert a seed", min_value = 0, step=1, format="%d", 
         help="Der Seed steuert die Zufallszahlen. Gleicher Seed bedeutet gleiche Simulation."
     )
-    
     matrixGroesse = st.select_slider(
        "Größe der Matrix",
        options=list(np.linspace(10, 50, 40).astype(np.int8)),
        value=30,
        help="Größer der symmetrischen Matrix wählen."
     )  
-    iterationCount = st.select_slider(
-       "Anzahl der Simulationsschritte",
-       options=list(np.linspace(1000, maxIter, int(maxIter/1000)).astype(np.int32)),
-       value=1000,
-       help="Wieviele Änderungen sollen auf dem Feld durchgeführt werden?"
-    )  
+    iterationCount = st.number_input(
+        "Anzahl der Simulationsschritte\n1000 bis 10.000.000 in tausender Schritten", min_value = 1000, step=1000, max_value=maxIter, format="%d", 
+        help="Wieviele Änderungen sollen auf dem Feld durchgeführt werden?"
+    ) 
     prozentJaeger = st.select_slider(
        "Anteil Jäger zu Beginn in %",
        options=list(np.linspace(1, 100, 101).astype(np.int8)),
