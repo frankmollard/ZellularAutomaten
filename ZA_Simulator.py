@@ -127,7 +127,7 @@ with st.sidebar.form("simulation_form"):
        help="Um welchen Faktor erhöht sich die Wahrscheinlichkeit zu sterben, wenn kein Futter mehr da ist?\n Bei Beutetieren, wenn Wiese fehlt bei Jägern wenn Beutetiere fehlen."
     )   
     codeSwitch = st.selectbox(
-        "Sterben oder Rennen",
+        "Sterben oder rennen",
         ("Sterben -> Rennen", "Rennen -> Sterben"),
         help="Hierbei handelt es sich um die Reihenfolge der Bedingungen.\nEntweder wird erst gefragt, ob der zufällige Tod eintritt, wenn nicht, wird danach nochmal gefragt\nob zufällig gesprungen wird, oder umgekehrt.\nTheoretisch könnte ersteres dadurch begründet werden, dass der Tod ein Binäres Ereignis ist und darüber entscheided\nob überhaupt noch ein Sprung möglich ist. Andererseits könnte man argumentieren, dass die Bewegung das Tier noch etwas länger am leben hält."
     )
@@ -425,6 +425,7 @@ if st.session_state["authentication_status"]:
                         st.session_state["geburtenBeute t-1"],
                         st.session_state["geburtenJaeger t-1"],
                         st.session_state["beuteProJaeger t-1"],
+                        st.session_state["wieseWandern t-1"]
                         st.session_state["randomSprung t-1"],
                         st.session_state["randomTot t-1"],
                         st.session_state["verhungerungsFaktor t-1"],
@@ -439,6 +440,7 @@ if st.session_state["authentication_status"]:
                         geburtenBeute,
                         geburtenJaeger,
                         beuteProJaeger,
+                        wieseWandern,
                         randomSprung,
                         randomTot,
                         verhungerungsFaktor,
@@ -446,7 +448,7 @@ if st.session_state["authentication_status"]:
                     ]
                 },
                 index=[
-                    "Matrix größe",
+                    "Matrix Größe",
                     "Seed",
                     "Iterationen",
                     "Start % Jäger",
@@ -454,10 +456,11 @@ if st.session_state["authentication_status"]:
                     "Geburten Beute",
                     "Geburten Jäger",
                     "Beute pro Jäger",
+                    "Beute wandert",
                     "Zufall Sprung",
                     "Zufall Tot",
                     "Verhungern Faktor",
-                    "Sterben oder Rennen"
+                    "Sterben oder rennen"
                 ]
             )
 
