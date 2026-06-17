@@ -370,7 +370,7 @@ def SimulationPlot(simTraject):
         np.where(
             simTraject == 0.5, "Wiese", "Beute"
         )
-    )
+    ) #alle Layer und Matrizen werden angepasst und dann als customdata verwendet.
     
     fig = px.imshow(
         simTraject,
