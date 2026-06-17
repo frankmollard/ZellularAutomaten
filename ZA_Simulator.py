@@ -476,6 +476,7 @@ if st.session_state["authentication_status"]:
         st.session_state["geburtenBeute t-1"] = geburtenBeute
         st.session_state["geburtenJaeger t-1"] = geburtenJaeger
         st.session_state["beuteProJaeger t-1"] = beuteProJaeger
+        st.session_state["wieseWandern t-1"] = wieseWandern
         st.session_state["randomSprung t-1"] = randomSprung
         st.session_state["randomTot t-1"] = randomTot
         st.session_state["verhungerungsFaktor t-1"] = verhungerungsFaktor
