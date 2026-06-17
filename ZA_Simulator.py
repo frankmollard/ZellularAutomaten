@@ -88,21 +88,26 @@ with st.sidebar.form("simulation_form"):
     )  
     geburtenBeute = st.select_slider(
        "Wieviele Beutetiere müssen für\neine Geburt im Umfels sein\nund keine Jäger",
-       options=list(np.linspace(1, 8, 8).astype(np.int8)),
+       options=list(np.linspace(2, 8, 8).astype(np.int8)),
        value=3,
-       help="Wenn keine Jäger in der Nähe sind und stören, und mindestens X Beutetiere da sind\nmindestens natürlich eins, aber ggf. auch mehr, die Wache stehen, dann kann ein Beutetier geboren werden."
+       help="Wenn keine Jäger in der nähe sind und stören, und mindestens X Beutetiere da sind\nmindestens natürlich zwei, aber ggf. auch mehr, die Wache stehen, dann kann ein Beutetier geboren werden.\nWichtig: dies gilt nur, wenn der Zellkern Wiese ist."
     )
     geburtenJaeger = st.select_slider(
        "Wieviele Raubtiere müssen für\neine Geburt im Umfels sein\nund keine Beute",
-       options=list(np.linspace(1, 8, 8).astype(np.int8)),
+       options=list(np.linspace(2, 8, 8).astype(np.int8)),
        value=3,
-       help="Wenn keine Beutetiere in der Nähe sind und stören, und mindestens X Jäger da sind\nmindestens natürlich einer, aber ggf. auch mehr, die Wache stehen, dann kann ein Jäger geboren werden."
+       help="Wenn keine Beutetiere in der Nähe sind und stören, und mindestens X Jäger da sind\nmindestens natürlich zwei, aber ggf. auch mehr, die Wache stehen, dann kann ein Jäger geboren werden.\nWichtig: dies gilt nur, wenn der Zellkern Wiese ist."
     )
     beuteProJaeger = st.select_slider(
        "Beute pro Jäger (für fressen und verteidigen)",
        options=list(np.linspace(0, 2, 21).astype(np.float16)),
        value=1,
        help="Bis zu welchem prozentualen Anteil Beute pro Jäger kann sich ein Jäger gegen Beute durchsetzen.\n Beispiel: Wenn der Anteil bei 1 liegt, also z.B. 2x Beute und 2xJäger im Umfeld dann gewinnt der Jäger und tötet die Beute.\n ansonsten ist es andersherum."
+    )
+    einzelGaenger = st.selectbox(
+        "Sind Jäger auch Einzelgänger?",
+        ("nein", "ja"),
+        help="Wenn einem Jäger ein einzelnes Beutetier begegnet und keine Weiteren Jäger im Moore Umfeld sind, dann Frisst der Jäger die Beute.\ndefault=nein"
     )
     wieseWandern = st.select_slider(
        "Wieviel Wiese muss für Beutewanderung da sein?",
@@ -134,9 +139,6 @@ with st.sidebar.form("simulation_form"):
         help="Hierbei handelt es sich um die Reihenfolge der Bedingungen.\nEntweder wird erst gefragt, ob der zufällige Tod eintritt, wenn nicht, wird danach nochmal gefragt\nob zufällig gesprungen wird, oder umgekehrt.\nTheoretisch könnte ersteres dadurch begründet werden, dass der Tod ein Binäres Ereignis ist und darüber entscheided\nob überhaupt noch ein Sprung möglich ist. Andererseits könnte man argumentieren, dass die Bewegung das Tier noch etwas länger am leben hält."
     )
 
-#def clear_Q():
-#    st.session_state["Q"] = 0
-
 
 def Moore_Umgebung_read(r,c, Zustand0):
     """
@@ -161,14 +163,21 @@ def Moore_Umgebung_read(r,c, Zustand0):
     return [target, left, upLeft, up, upRight, right, lowRight, low, lowLeft]
 
 
-def bedingungen(seeds, test, gdB: int = 3, gdJ: int = 3, bpj: int = 1, ww: int = 3, randSprung: float = 0.1, randTot: float = 0.01, verhungernFaktor: float = 2, reihenfolge: str = "Sterben -> Rennen"):
+def bedingungen(
+    seeds, test, 
+    gdB: int = 3, gdJ: int = 3, bpj: int = 1, ww: int = 3, 
+    randSprung: float = 0.1, randTot: float = 0.01, verhungernFaktor: float = 2, 
+    reihenfolge: str = "Sterben -> Rennen", eG: str = "nein"
+):
     """
-    gdX=wieviele müssen für Geburt im Moore Umfeld sein
-    bpj=beute pro jäger (für fressen und verteidigen)
-    ww=wieviel Wiese muss für Wanderung da sein
-    randSprung=Wahrscheinlichkeit für Zufallssprung
-    randTot=Wahrscheinlichkeit für Zufallstod
-    verhungernFaktor=Wenn kein Futter, um welchen Faktor erhöht sich die Sterblichkeit
+    gdX: wieviele müssen für Geburt im Moore Umfeld sein
+    bpj: beute pro jäger (für fressen und verteidigen)
+    ww: wieviel Wiese muss für Wanderung da sein
+    randSprung: Wahrscheinlichkeit für Zufallssprung
+    randTot: Wahrscheinlichkeit für Zufallstod
+    verhungernFaktor: Wenn kein Futter, um welchen Faktor erhöht sich die Sterblichkeit
+    reihenfolge: Erst random Sterben, wenn nicht random wandern, vice versa
+    eG: Ist der Jäger auch Einzelgänger? default nein.
     """
 
     t = test.copy()
@@ -217,6 +226,11 @@ def bedingungen(seeds, test, gdB: int = 3, gdJ: int = 3, bpj: int = 1, ww: int =
         wandern = BeuteImUmfeld[rnd]+1#+1 weil erstes Element die Mitte ist
         t[wandern] = -1
         t[0] = 0
+
+    elif JägerImUmfeld.shape[0] == 0 and BeuteImUmfeld.shape[0] == 1 and t[0] == -1 and eG == "ja": #Einzelgänger?
+        wandern = BeuteImUmfeld[0]
+        t[wandern] = -1
+        t[0] = 0    
             
     elif JägerImUmfeld.shape[0] != 0 and BeuteImUmfeld.shape[0] / JägerImUmfeld.shape[0] > bpj and t[0] == -1:#sterben
         t[0] = 0
@@ -405,6 +419,7 @@ if st.session_state["authentication_status"]:
                         randTot=int(randomTot)/100, 
                         verhungernFaktor=verhungerungsFaktor,
                         reihenfolge = codeSwitch,
+                        eG = einzelGaenger,
                     )
                 except Exception as e:
                     st.error("Die Simulation ist fehlgeschlagen.")
@@ -427,6 +442,7 @@ if st.session_state["authentication_status"]:
                         st.session_state["geburtenBeute t-1"],
                         st.session_state["geburtenJaeger t-1"],
                         st.session_state["beuteProJaeger t-1"],
+                        st.session_state["einzelGaenger t-1"],
                         st.session_state["wieseWandern t-1"],
                         st.session_state["randomSprung t-1"],
                         st.session_state["randomTot t-1"],
@@ -442,6 +458,7 @@ if st.session_state["authentication_status"]:
                         geburtenBeute,
                         geburtenJaeger,
                         beuteProJaeger,
+                        einzelGaenger,
                         wieseWandern,
                         randomSprung,
                         randomTot,
@@ -458,6 +475,7 @@ if st.session_state["authentication_status"]:
                     "Geburten Beute",
                     "Geburten Jäger",
                     "Beute pro Jäger",
+                    "Jäger Einzelgänger?",
                     "Beute wandert",
                     "Zufall Sprung",
                     "Zufall Tot",
@@ -478,6 +496,7 @@ if st.session_state["authentication_status"]:
         st.session_state["geburtenBeute t-1"] = geburtenBeute
         st.session_state["geburtenJaeger t-1"] = geburtenJaeger
         st.session_state["beuteProJaeger t-1"] = beuteProJaeger
+        st.session_state["einzelGaenger t-1"] = einzelGaenger
         st.session_state["wieseWandern t-1"] = wieseWandern
         st.session_state["randomSprung t-1"] = randomSprung
         st.session_state["randomTot t-1"] = randomTot
