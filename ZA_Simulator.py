@@ -15,7 +15,7 @@ warnings.filterwarnings("ignore")
 
 maxIter = 10000000 #Es muss mit maxIter gearbeit werden, da sonst immer wieder andere zufallszahlen kommen würden
 resolutionChart = 1000 #in welchen Intervallen werden Relationen der Elemente (Jäger, Beute, Wiese) persistiert.
-resolutionHeat = 1000 #in welchen Intervallen werden Zustände der Matrix persistiert.
+resolutionHeat = 200 #in welchen Intervallen werden Zustände der Matrix persistiert.
 
 st.set_page_config(
     page_title="Zellularautomaten",
