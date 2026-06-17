@@ -412,6 +412,8 @@ def SimulationPlot(simTraject):
 
 ##########START#################
 if st.session_state["authentication_status"]:
+    with st.sidebar:
+        authenticator.logout() 
     if "runs" not in st.session_state:
         st.session_state["runs"] = 0
     st.session_state["runs"] += 1 
@@ -422,7 +424,7 @@ if st.session_state["authentication_status"]:
                 st.error(f"Jäger + Beute müssen zusammen < 100 % ergeben.\nJäger liegt bei {int(prozentJaeger)} und Beute bei {int(prozentBeute)}, also beide zusammen bei {int(prozentJaeger)+int(prozentBeute)}")
                 st.stop()
             gc.collect()
-            with st.status("Simulation Läuft...", expanded=True):
+            with st.status("Simulation Läuft...", expanded=True) as state:
 
                 progress_bar = st.progress(0)
                 status_text = st.empty()
@@ -443,6 +445,7 @@ if st.session_state["authentication_status"]:
                         reihenfolge = codeSwitch,
                         eG = einzelGaenger,
                     )
+                    state.update(label="Simulation vollendet!", state="complete", expanded=False)
                 except Exception as e:
                     st.error("Die Simulation ist fehlgeschlagen.")
                     st.exception(e)
@@ -525,9 +528,6 @@ if st.session_state["authentication_status"]:
         st.session_state["verhungerungsFaktor t-1"] = verhungerungsFaktor
         st.session_state["codeSwitch t-1"] = codeSwitch
         
-        with st.sidebar:
-            authenticator.logout()
-    
     else:
         st.error("rerun")
         st.rerun()
