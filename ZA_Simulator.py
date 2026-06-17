@@ -348,15 +348,30 @@ def attraktorPlot(wbj, iC):
 
 @st.cache_data(show_spinner=False)
 def SimulationPlot(simTraject):
-
+    
     colorscale = [
         (0, "red"),     
         (0.5, "green"),  
         (1, "orange")     
     ]
 
+    hover_tmpl = (
+        "Feld info:<br>"
+        "x: %{x}<br>"
+        "y: %{y}<br>"
+        "Spezies: %{customdata}<extra></extra>"  # <extra></extra> entfernt trace name
+    )
+
     simTraject = (simTraject+1)/2 #damit aus -1,0,1 -> 0,0.51 wird
     simTraject = simTraject[:, 1:-1, 1:-1]
+    
+    hoverdata = np.where(
+        simTraject == 0, "Jäger",
+        np.where(
+            simTraject == 0.5, "Wiese", "Beute"
+        )
+    )
+    
     fig = px.imshow(
         simTraject,
         animation_frame=0,  # first axis is the frame index
@@ -366,7 +381,7 @@ def SimulationPlot(simTraject):
         origin="lower"
     )
 
-    # Improve layout
+    # Ändere Layout
     fig.update_layout(
         title="Trajektorie aufgeteilt auf 100 Zyklen",
         coloraxis_showscale=True,
@@ -384,8 +399,16 @@ def SimulationPlot(simTraject):
             "currentvalue": {"prefix": "Frame: "}
         }]
     )
-    #fig.layout.updatemenus[0].buttons[0].args[1]['frame']['duration'] = 50
-    #fig.layout.updatemenus[0].buttons[0].args[1]['transition']['duration'] = 50
+    
+    # Tooltip für initiales Bild
+    fig.data[0].customdata = hoverdata[0]
+    fig.data[0].hovertemplate = hover_tmpl
+
+    # Tooltip für alle Animations-Frames
+    for i, frame in enumerate(fig.frames):
+        frame.data[0].customdata = hoverdata[i]
+        frame.data[0].hovertemplate = hover_tmpl
+        
     return fig
 
 ##########START#################
