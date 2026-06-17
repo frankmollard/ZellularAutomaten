@@ -70,7 +70,7 @@ with st.sidebar.form("simulation_form"):
        help="Größer der symmetrischen Matrix wählen."
     )  
     iterationCount = st.number_input(
-        "Anzahl der Simulationsschritte\n1000 bis {:,} in tausender Schritten".format(maxIter).replace(",", "."), 
+        "Anzahl der Simulationsschritte\n1000 bis\n{:,} in Tausenderschritten".format(maxIter).replace(",", "."), 
         min_value = 1000, step=1000, max_value=maxIter, format="%d", 
         help="Wieviele Änderungen sollen auf dem Feld durchgeführt werden?"
     ) 
