@@ -315,13 +315,13 @@ def trajektorie(mG, iC, percJaeger, percBeute, seedX: int = 0, **kwargs):
         )
 
         persistIter = iterationen / resolutionChart
-        if iterations % persistIter == 0: # genau 1000 mal wird W, J, B gespeichert
+        if iterations % persistIter == 0: # genau resolutionChart mal wird W, J, B gespeichert
             W.append(np.where(np.reshape(Z0, shape=(-1)) == 0)[0].shape[0]/(height*width))
             J.append(np.where(np.reshape(Z0, shape=(-1)) == -1)[0].shape[0]/(height*width))
             B.append(np.where(np.reshape(Z0, shape=(-1)) == 1)[0].shape[0]/(height*width))
 
         persistIter = iterationen / resolutionHeat
-        if iterations % persistIter == 0: # genau 50 mal wird Z0 gespeichert
+        if iterations % persistIter == 0: # genau resolutionHeat mal wird Z0 gespeichert
             trajektorie.append(Z0.copy())
 
         if iterations % 100 == 0:
