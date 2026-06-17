@@ -13,6 +13,8 @@ from yaml.loader import SafeLoader
 import warnings 
 warnings.filterwarnings("ignore")
 
+maxIter = 5000000 #Es muss mit maxIter gearbeit werden, da sonst immer wieder andere zufallszahlen kommen würden
+
 st.set_page_config(
     page_title="Zellularautomaten",
     page_icon="🦠",
@@ -68,7 +70,7 @@ with st.sidebar.form("simulation_form"):
     )  
     iterationCount = st.select_slider(
        "Anzahl der Simulationsschritte",
-       options=list(np.linspace(1000, 5000000, 5000).astype(np.int32)),
+       options=list(np.linspace(1000, maxIter, int(maxIter/1000)).astype(np.int32)),
        value=1000,
        help="Wieviele Änderungen sollen auf dem Feld durchgeführt werden?"
     )  
@@ -276,8 +278,8 @@ def trajektorie(mG, iC, percJaeger, percBeute, seedX: int = 0, **kwargs):
     z = np.random.choice([-1,0,1], size=(height, width), replace=True, p=[percJaeger, percWiese, percBeute])
     Z0 = z.copy()
     iterationen = iC
-    randRow = np.random.randint(1, z.shape[0]-1, iterationen)#-1 bis 1, weil die Ränder wegen Moore Umgebung ausgespart werden.
-    randCol = np.random.randint(1, z.shape[0]-1, iterationen)
+    randRow = np.random.randint(1, z.shape[0]-1, maxIter)[:iterationen]#-1 bis 1, weil die Ränder wegen Moore Umgebung ausgespart werden.
+    randCol = np.random.randint(1, z.shape[0]-1, maxIter)[:iterationen]
     
     trajektorie = [Z0]
     animationFrame = np.zeros(Z0.shape[0])
