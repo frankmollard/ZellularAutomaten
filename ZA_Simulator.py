@@ -134,9 +134,9 @@ with st.sidebar.form("simulation_form"):
        help="Um welchen Faktor erhöht sich die Wahrscheinlichkeit zu sterben, wenn kein Futter mehr da ist?\n Bei Beutetieren, wenn Wiese fehlt bei Jägern wenn Beutetiere fehlen."
     )   
     codeSwitch = st.selectbox(
-        "Sterben oder rennen",
-        ("Sterben -> Rennen", "Rennen -> Sterben"),
-        help="Hierbei handelt es sich um die Reihenfolge der Bedingungen.\nEntweder wird erst gefragt, ob der zufällige Tod eintritt, wenn nicht, wird danach nochmal gefragt\nob zufällig gesprungen wird, oder umgekehrt.\nTheoretisch könnte ersteres dadurch begründet werden, dass der Tod ein Binäres Ereignis ist und darüber entscheided\nob überhaupt noch ein Sprung möglich ist. Andererseits könnte man argumentieren, dass die Bewegung das Tier noch etwas länger am leben hält."
+        "Verhungern oder Weggehen",
+        ("Verhungern -> Weggehen", "Weggehen -> Verhungern"),
+        help="Hierbei handelt es sich um die Reihenfolge der Bedingungen.\nEntweder wird erst gefragt, ob der zufällige Hungertod eintritt, wenn nicht, wird danach nochmal gefragt\nob zufällig gesprungen wird, oder umgekehrt.\nTheoretisch könnte ersteres dadurch begründet werden, dass der Tod ein Binäres Ereignis ist und darüber entscheided\nob überhaupt noch ein Sprung möglich ist. Andererseits könnte man argumentieren, dass die Bewegung das Tier noch etwas länger am leben hält."
     )
 
 
