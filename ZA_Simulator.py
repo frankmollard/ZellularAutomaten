@@ -215,7 +215,7 @@ def bedingungen(
             rs = np.random.rand(1,1)[0][0]
             if WieseImUmfeld.shape[0] != 0 and rs < randSprung and t[0] != 0:
                 rnd = np.random.randint(0, WieseImUmfeld.shape[0])
-                wandern = WieseImUmfeld[rnd]+1#+1 weil erstes Element die Mitte ist
+                wandern = WieseImUmfeld[rnd]+1 #+1 weil erstes Element Zellkern ist und aus WieseImUmfeld rausgenommen wurde
                 t[wandern] = t[0]
                 t[0] = 0
                 return t
@@ -223,12 +223,12 @@ def bedingungen(
     if JägerImUmfeld.shape[0] != 0 and BeuteImUmfeld.shape[0] / JägerImUmfeld.shape[0] <= bpj and t[0] == -1 \
     and BeuteImUmfeld.shape[0] != 0:#wandern
         rnd = np.random.randint(0, BeuteImUmfeld.shape[0])
-        wandern = BeuteImUmfeld[rnd]+1#+1 weil erstes Element die Mitte ist
+        wandern = BeuteImUmfeld[rnd]+1 #+1 weil erstes Element Zellkern ist und aus BeuteImUmfeld rausgenommen wurde
         t[wandern] = -1
         t[0] = 0
 
     elif JägerImUmfeld.shape[0] == 0 and BeuteImUmfeld.shape[0] == 1 and t[0] == -1 and eG == "ja": #Einzelgänger?
-        wandern = BeuteImUmfeld[0]+1
+        wandern = BeuteImUmfeld[0]+1 #+1 weil erstes Element Zellkern ist und aus BeuteImUmfeld rausgenommen wurde
         t[wandern] = -1
         t[0] = 0    
             
