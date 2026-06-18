@@ -491,7 +491,7 @@ if st.session_state["authentication_status"]:
                         randomTot,
                         verhungerungsFaktor,
                         codeSwitch,
-                        np.clip(int(randomTot)/100 * verhungerungsFaktor, 0, 1),
+                        np.clip(int(randomTot)/100 * verhungerungsFaktor, 0, 1) * 100,
                     ]
                 },
                 index=[
@@ -509,7 +509,7 @@ if st.session_state["authentication_status"]:
                     "Zufall Tot",
                     "Verhungern Faktor",
                     "Sterben oder rennen",
-                    "Verhungern Risiko",
+                    "Verhungern Risiko in %",
                 ]
             )
 
@@ -531,7 +531,7 @@ if st.session_state["authentication_status"]:
         st.session_state["randomTot t-1"] = randomTot
         st.session_state["verhungerungsFaktor t-1"] = verhungerungsFaktor
         st.session_state["codeSwitch t-1"] = codeSwitch
-        st.session_state["VerhungernProba t-1"] = np.clip(int(randomTot)/100 * verhungerungsFaktor, 0, 1)
+        st.session_state["VerhungernProba t-1"] = np.clip(int(randomTot)/100 * verhungerungsFaktor, 0, 1) * 100
         
     else:
         st.error("rerun")
