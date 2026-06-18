@@ -179,7 +179,7 @@ def bedingungen(
     reihenfolge: Erst random Sterben, wenn nicht random wandern, vice versa
     eG: Ist der Jäger auch Einzelgänger? default nein.
     """
-
+    beuteLebt = np.any(Zustand0[1:-1, 1:-1]==1) # Nur wenn noch Beute lebt, überleben auch die Jäger. Daher werden nur Jäger geboren, wenn beuteLebt
     t = test.copy()
     BeuteImUmfeld = np.where(np.array(t[1:]) == 1)[0]
     JägerImUmfeld = np.where(np.array(t[1:]) == -1)[0]
@@ -232,10 +232,10 @@ def bedingungen(
         t[wandern] = -1
         t[0] = 0    
             
-    elif JägerImUmfeld.shape[0] != 0 and BeuteImUmfeld.shape[0] / JägerImUmfeld.shape[0] > bpj and t[0] == -1:#sterben
+    elif JägerImUmfeld.shape[0] != 0 and BeuteImUmfeld.shape[0] / JägerImUmfeld.shape[0] > bpj and t[0] == -1: #Jäger stirbt
         t[0] = 0
               
-    elif BeuteImUmfeld.shape[0] == 0 and JägerImUmfeld.shape[0] >= gdJ and t[0] == 0:#Jäger geboren
+    elif BeuteImUmfeld.shape[0] == 0 and JägerImUmfeld.shape[0] >= gdJ and t[0] == 0 and beuteLebt: #Jäger geboren wenn noch beute vorhanden
         t[0] = -1
             
     elif JägerImUmfeld.shape[0] == 0 and BeuteImUmfeld.shape[0] >= gdB and t[0] == 0:#Beute geboren
@@ -307,6 +307,7 @@ def trajektorie(mG, iC, percJaeger, percBeute, seedX: int = 0, **kwargs):
             bedingungen(
                 iterations + seedX, 
                 Moore_Umgebung_read(r, c, Z0), 
+                Z0,
                 **kwargs
             ), 
             Z0
