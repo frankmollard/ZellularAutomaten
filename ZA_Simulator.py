@@ -190,7 +190,7 @@ def bedingungen(
     #random Tot
     np.random.seed(seed=seeds+1)
     rt = np.random.rand(1,1)[0][0]
-    if rt < randTot and t[0] != 0:
+    if rt <= randTot and t[0] != 0:
         t[0] = 0    
         return t
 
@@ -202,10 +202,10 @@ def bedingungen(
     for abschnitt in reihenfolge:
         if abschnitt == 0:
             #Verhungern
-            if BeuteImUmfeld.shape[0] == 0 and rt < verhungern_tod and t[0] == -1:
+            if BeuteImUmfeld.shape[0] == 0 and rt <= verhungern_tod and t[0] == -1:
                 t[0] = 0 
                 return t
-            if WieseImUmfeld.shape[0] == 0 and rt < verhungern_tod and t[0] == 1:
+            if WieseImUmfeld.shape[0] == 0 and rt <= verhungern_tod and t[0] == 1:
                 t[0] = 0 
                 return t
     
