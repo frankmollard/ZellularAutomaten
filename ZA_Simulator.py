@@ -164,7 +164,7 @@ def Moore_Umgebung_read(r,c, Zustand0):
 
 
 def bedingungen(
-    seeds, test, 
+    seeds, test, Zustand0,
     gdB: int = 3, gdJ: int = 3, bpj: int = 1, ww: int = 3, 
     randSprung: float = 0.1, randTot: float = 0.01, verhungernFaktor: float = 2, 
     reihenfolge: str = "Sterben -> Rennen", eG: str = "nein"
