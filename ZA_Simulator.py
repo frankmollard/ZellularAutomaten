@@ -151,7 +151,7 @@ with st.sidebar.form("simulation_form"):
     )
 
 
-def Moore_Umgebung_read(r,c, Zustand0, erweitert=False):
+def Moore_Umgebung_read(r,c, Zustand0, erweitert: bool=False):
     """
     r=row
     c=column
@@ -184,13 +184,13 @@ def Moore_Umgebung_read(r,c, Zustand0, erweitert=False):
         lowLowRight = Zustand0[r+2, c+1].tolist()
         lowLow = Zustand0[r+2, c].tolist()
         lowLowLeft = Zustand0[r+2, c-1].tolist()
+        leftLeftLow = Zustand0[r+1, c-2].tolist()
 
         return [target, left, upLeft, up, upRight, right, lowRight, low, lowLeft, 
-                leftLeft, upLeftLeft, upUpLeft, upUp, upUpRight, upRightRight, rightRight, 
-                rightRight, rightRightLow, lowLowRight, lowLow, lowLowLeft,
+                leftLeft, upLeftLeft, upUpLeft, upUp, upUpRight, upRightRight, 
+                rightRight, rightRightLow, lowLowRight, lowLow, lowLowLeft, leftLeftLow
                ]
 
-    
     return [target, left, upLeft, up, upRight, right, lowRight, low, lowLeft,]
 
 
