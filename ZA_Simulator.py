@@ -355,6 +355,12 @@ def trajektorie(mG, iC, percJaeger, percBeute, MooreUmfeld: str = "Normal", seed
     iterationen = iC
     randRow = np.random.randint(2, z.shape[0]-2, maxIter)[:iterationen]#-2 bis 2, weil die Ränder wegen erweiterter Moore Umgebung ausgespart werden.
     randCol = np.random.randint(2, z.shape[0]-2, maxIter)[:iterationen]
+
+    #Damit keine Tier von außen reinkommen.
+    Z0[:2, :] = 0      # obere 2 Zeilen
+    Z0[-2:, :] = 0     # untere 2 Zeilen
+    Z0[:, :2] = 0      # linke 2 Spalten
+    Z0[:, -2:] = 0     # rechte 2 Spalten
     
     trajektorie = [Z0[2:-2, 2:-2]]
     animationFrame = np.zeros(Z0.shape[0])
@@ -373,6 +379,12 @@ def trajektorie(mG, iC, percJaeger, percBeute, MooreUmfeld: str = "Normal", seed
             ), 
             Z0
         )
+
+        #Damit keine Tier von außen reinkommen.
+        Z0[:2, :] = 0      # obere 2 Zeilen
+        Z0[-2:, :] = 0     # untere 2 Zeilen
+        Z0[:, :2] = 0      # linke 2 Spalten
+        Z0[:, -2:] = 0     # rechte 2 Spalten
 
         persistIter = iterationen / resolutionChart
         if iterations % persistIter == 0: # genau resolutionChart mal wird W, J, B gespeichert
