@@ -143,6 +143,12 @@ with st.sidebar.form("simulation_form"):
         ("Normal", "Erweitert"),
         help="Soll das Moore Umfeld erweitert werden?"
     )
+    prozentBeute = st.select_slider(
+       "Jäger keine Geburten mehr ab Beute %",
+       options=list(np.linspace(0, 100, 101).astype(np.int8)),
+       value=5,
+       help="Wieviel Prozent Beute müssen da sein, bevor die Jäger keine Kinder mehr bekommen, da Futter fehlt?"
+    )
 
 
 def Moore_Umgebung_read(r,c, Zustand0, erweitert=False):
@@ -206,8 +212,8 @@ def bedingungen(
     """
     
     t = test.copy()
-
-    BeuteNochDa = np.any(Zustand0[1:-1, 1:-1] == 1) # Nur wenn überhaupt noch beute da ist, kann es zu Geburten von Jägern kommen.
+    
+    BeutePerc = np.sum(Zustand0[1:-1, 1:-1]==1)/Zustand0[1:-1, 1:-1].shape[0]**2# Nur wenn noch mindestens prozentBeute Beute da ist, kann es zu Geburten von Jägern kommen.
     
     BeuteImUmfeld = np.where(np.array(t[1:]) == 1)[0]
     JägerImUmfeld = np.where(np.array(t[1:]) == -1)[0]
@@ -263,7 +269,7 @@ def bedingungen(
     elif JägerImUmfeld.shape[0] != 0 and BeuteImUmfeld.shape[0] / JägerImUmfeld.shape[0] > bpj and t[0] == -1: #Jäger stirbt
         t[0] = 0
               
-    elif BeuteImUmfeld.shape[0] == 0 and JägerImUmfeld.shape[0] >= gdJ and t[0] == 0 and BeuteNochDa:#Jäger geboren wenn noch Beute überhaupt noch vorhanden
+    elif BeuteImUmfeld.shape[0] == 0 and JägerImUmfeld.shape[0] >= gdJ and t[0] == 0 and BeutePerc >= prozentBeute: #Jäger geboren wenn noch prozentBeute % Beute vorhanden
         t[0] = -1
             
     elif JägerImUmfeld.shape[0] == 0 and BeuteImUmfeld.shape[0] >= gdB and t[0] == 0:#Beute geboren
@@ -504,6 +510,7 @@ if st.session_state["authentication_status"]:
                         st.session_state["verhungerungsFaktor t-1"],
                         st.session_state["codeSwitch t-1"],
                         st.session_state["MooreGroß t-1"],
+                        st.session_state["prozentBeute t-1"],
                         st.session_state["VerhungernProba t-1"],
                     ],
                     "Parameter t": [
@@ -522,6 +529,7 @@ if st.session_state["authentication_status"]:
                         verhungerungsFaktor,
                         codeSwitch,
                         MooreGroß,
+                        prozentBeute,
                         np.clip(int(randomTot)/100 * verhungerungsFaktor, 0, 1) * 100,
                     ]
                 },
@@ -541,6 +549,7 @@ if st.session_state["authentication_status"]:
                     "Verhungern Faktor",
                     "Sterben oder rennen",
                     "Erweitetes Moore Umfeld",
+                    "Beute % keine Jäger mehr",
                     "Verhungern Risiko in %",
                 ]
             )
@@ -564,6 +573,7 @@ if st.session_state["authentication_status"]:
         st.session_state["verhungerungsFaktor t-1"] = verhungerungsFaktor
         st.session_state["codeSwitch t-1"] = codeSwitch
         st.session_state["MooreGroß t-1"] = MooreGroß
+        st.session_state["prozentBeute t-1"] = prozentBeute
         st.session_state["VerhungernProba t-1"] = np.clip(int(randomTot)/100 * verhungerungsFaktor, 0, 1) * 100
         
     else:
