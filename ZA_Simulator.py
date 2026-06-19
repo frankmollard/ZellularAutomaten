@@ -138,7 +138,7 @@ with st.sidebar.form("simulation_form"):
         ("Verhungern -> Weggehen", "Weggehen -> Verhungern"),
         help="Hierbei handelt es sich um die Reihenfolge der Bedingungen.\nEntweder wird erst gefragt, ob der zufällige Hungertod eintritt, wenn nicht, wird danach nochmal gefragt\nob zufällig gesprungen wird, oder umgekehrt.\nTheoretisch könnte ersteres dadurch begründet werden, dass der Tod ein Binäres Ereignis ist und darüber entscheided\nob überhaupt noch ein Sprung möglich ist. Andererseits könnte man argumentieren, dass die Bewegung das Tier noch etwas länger am leben hält."
     )
-    MooreGroß = st.selectbox(
+    MooreGross = st.selectbox(
         "Moore Umfeld",
         ("Normal", "Erweitert"),
         help="Soll das Moore Umfeld erweitert werden?"
@@ -198,7 +198,7 @@ def bedingungen(
     seeds, test, Zustand0,
     gdB: int = 3, gdJ: int = 3, bpj: int = 1, ww: int = 3, 
     randSprung: float = 0.1, randTot: float = 0.01, verhungernFaktor: float = 2, 
-    reihenfolge: str = "Sterben -> Rennen", eG: str = "nein"
+    reihenfolge: str = "Sterben -> Rennen", eG: str = "nein", bS: int = 5
 ):
     """
     gdX: wieviele müssen für Geburt im Moore Umfeld sein
@@ -269,7 +269,7 @@ def bedingungen(
     elif JägerImUmfeld.shape[0] != 0 and BeuteImUmfeld.shape[0] / JägerImUmfeld.shape[0] > bpj and t[0] == -1: #Jäger stirbt
         t[0] = 0
               
-    elif BeuteImUmfeld.shape[0] == 0 and JägerImUmfeld.shape[0] >= gdJ and t[0] == 0 and BeutePerc >= beuteSchwelle/100: #Jäger geboren wenn noch prozentBeute % Beute vorhanden
+    elif BeuteImUmfeld.shape[0] == 0 and JägerImUmfeld.shape[0] >= gdJ and t[0] == 0 and BeutePerc >= bS/100: #Jäger geboren wenn noch prozentBeute % Beute vorhanden
         t[0] = -1
             
     elif JägerImUmfeld.shape[0] == 0 and BeuteImUmfeld.shape[0] >= gdB and t[0] == 0:#Beute geboren
@@ -501,6 +501,8 @@ if st.session_state["authentication_status"]:
                         verhungernFaktor=verhungerungsFaktor,
                         reihenfolge = codeSwitch,
                         eG = einzelGaenger,
+                        MooreUmfeld = MooreGross,
+                        bS  = beuteSchwelle
                     )
                     state.update(label="Simulation vollendet!", state="complete", expanded=False)
                 except Exception as e:
@@ -530,7 +532,7 @@ if st.session_state["authentication_status"]:
                         st.session_state["randomTot t-1"],
                         st.session_state["verhungerungsFaktor t-1"],
                         st.session_state["codeSwitch t-1"],
-                        st.session_state["MooreGroß t-1"],
+                        st.session_state["MooreGross t-1"],
                         st.session_state["beuteSchwelle t-1"],
                         st.session_state["VerhungernProba t-1"],
                     ],
@@ -549,7 +551,7 @@ if st.session_state["authentication_status"]:
                         randomTot,
                         verhungerungsFaktor,
                         codeSwitch,
-                        MooreGroß,
+                        MooreGross,
                         beuteSchwelle,
                         np.clip(int(randomTot)/100 * verhungerungsFaktor, 0, 1) * 100,
                     ]
@@ -593,7 +595,7 @@ if st.session_state["authentication_status"]:
         st.session_state["randomTot t-1"] = randomTot
         st.session_state["verhungerungsFaktor t-1"] = verhungerungsFaktor
         st.session_state["codeSwitch t-1"] = codeSwitch
-        st.session_state["MooreGroß t-1"] = MooreGroß
+        st.session_state["MooreGross t-1"] = MooreGross
         st.session_state["beuteSchwelle t-1"] = beuteSchwelle
         st.session_state["VerhungernProba t-1"] = np.clip(int(randomTot)/100 * verhungerungsFaktor, 0, 1) * 100
         
