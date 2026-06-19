@@ -189,7 +189,7 @@ def Moore_Umgebung_read(r,c, Zustand0, erweitert=False):
 
 
 def bedingungen(
-    seeds, test, testErweitert, Zustand0,
+    seeds, test, Zustand0,
     gdB: int = 3, gdJ: int = 3, bpj: int = 1, ww: int = 3, 
     randSprung: float = 0.1, randTot: float = 0.01, verhungernFaktor: float = 2, 
     reihenfolge: str = "Sterben -> Rennen", eG: str = "nein"
@@ -206,13 +206,13 @@ def bedingungen(
     """
     
     t = test.copy()
+
+    BeuteNochDa = np.any(Zustand0[1:-1, 1:-1] == 1) # Nur wenn überhaupt noch beute da ist, kann es zu Geburten von Jägern kommen.
+    
     BeuteImUmfeld = np.where(np.array(t[1:]) == 1)[0]
     JägerImUmfeld = np.where(np.array(t[1:]) == -1)[0]
     WieseImUmfeld = np.where(np.array(t[1:]) == 0)[0]
 
-    tE = testErweitert.copy()
-    BeuteImErweitertenUmfeld = np.where(np.array(tE[1:]) == 1)[0] # Nur wenn noch Beute im erweiterten Umfeld lebt, überleben auch die Jäger. Daher werden nur Jäger geboren, wenn beuteLebt
-    
     verhungern_tod = np.clip(randTot*verhungernFaktor, 0, 1).item()
     
     #random Tot
@@ -263,7 +263,7 @@ def bedingungen(
     elif JägerImUmfeld.shape[0] != 0 and BeuteImUmfeld.shape[0] / JägerImUmfeld.shape[0] > bpj and t[0] == -1: #Jäger stirbt
         t[0] = 0
               
-    elif BeuteImUmfeld.shape[0] == 0 and JägerImUmfeld.shape[0] >= gdJ and t[0] == 0 and BeuteImErweitertenUmfeld.shape[0] != 0:#Jäger geboren wenn noch beute vorhanden
+    elif BeuteImUmfeld.shape[0] == 0 and JägerImUmfeld.shape[0] >= gdJ and t[0] == 0 and BeuteNochDa:#Jäger geboren wenn noch Beute überhaupt noch vorhanden
         t[0] = -1
             
     elif JägerImUmfeld.shape[0] == 0 and BeuteImUmfeld.shape[0] >= gdB and t[0] == 0:#Beute geboren
@@ -335,7 +335,6 @@ def trajektorie(mG, iC, percJaeger, percBeute, MooreUmfeld: str = "Normal", seed
             bedingungen(
                 iterations + seedX, 
                 Moore_Umgebung_read(r, c, Z0, erweitert=MooreUmfeld), 
-                Moore_Umgebung_read(r, c, Z0, erweitert=True), 
                 Z0,
                 **kwargs
             ), 
@@ -504,6 +503,7 @@ if st.session_state["authentication_status"]:
                         st.session_state["randomTot t-1"],
                         st.session_state["verhungerungsFaktor t-1"],
                         st.session_state["codeSwitch t-1"],
+                        st.session_state["MooreGroß t-1"],
                         st.session_state["VerhungernProba t-1"],
                     ],
                     "Parameter t": [
@@ -521,6 +521,7 @@ if st.session_state["authentication_status"]:
                         randomTot,
                         verhungerungsFaktor,
                         codeSwitch,
+                        MooreGroß,
                         np.clip(int(randomTot)/100 * verhungerungsFaktor, 0, 1) * 100,
                     ]
                 },
@@ -539,6 +540,7 @@ if st.session_state["authentication_status"]:
                     "Zufall Tot",
                     "Verhungern Faktor",
                     "Sterben oder rennen",
+                    "Erweitetes Moore Umfeld"
                     "Verhungern Risiko in %",
                 ]
             )
@@ -561,6 +563,7 @@ if st.session_state["authentication_status"]:
         st.session_state["randomTot t-1"] = randomTot
         st.session_state["verhungerungsFaktor t-1"] = verhungerungsFaktor
         st.session_state["codeSwitch t-1"] = codeSwitch
+        st.session_state["MooreGroß t-1"] = MooreGroß
         st.session_state["VerhungernProba t-1"] = np.clip(int(randomTot)/100 * verhungerungsFaktor, 0, 1) * 100
         
     else:
