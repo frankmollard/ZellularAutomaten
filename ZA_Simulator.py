@@ -101,7 +101,7 @@ with st.sidebar.form("simulation_form"):
     beuteProJaeger = st.select_slider(
        "Beute pro Jäger (für fressen und verteidigen)",
        options=list(np.linspace(0, 2, 21).astype(np.float16)),
-       value=1,
+       value=1.7,
        help="Bis zu welchem prozentualen Anteil Beute pro Jäger kann sich ein Jäger gegen Beute durchsetzen.\n Beispiel: Wenn der Anteil bei 1 liegt, also z.B. 2x Beute und 2xJäger im Umfeld dann gewinnt der Jäger und tötet die Beute.\n ansonsten ist es andersherum."
     )
     einzelGaenger = st.selectbox(
@@ -112,7 +112,7 @@ with st.sidebar.form("simulation_form"):
     wieseWandern = st.select_slider(
        "Wieviel Wiese muss für Beutewanderung da sein?",
        options=list(np.linspace(1, 8, 8).astype(np.int8)),
-       value=3,
+       value=2,
        help="Wieviele Elemente im Umfeld müssen freie Wiese sein, um eine Wanderung der Beute in das Moor Umfeld zu ermöglichen?"
     )
     randomSprung = st.select_slider(
@@ -130,7 +130,7 @@ with st.sidebar.form("simulation_form"):
     verhungerungsFaktor = st.select_slider(
        "Wenn kein Futter, um welchen Faktor erhöht\nsich die Sterblichkeit (1=keine Erhöhung)",
        options=list(np.linspace(1, 10, 91).astype(np.float16)),
-       value=3,
+       value=2.5,
        help="Um welchen Faktor erhöht sich die Wahrscheinlichkeit zu sterben, wenn kein Futter mehr da ist?\n Bei Beutetieren, wenn Wiese fehlt bei Jägern wenn Beutetiere fehlen."
     )   
     codeSwitch = st.selectbox(
