@@ -321,6 +321,11 @@ def trajektorie(mG, iC, percJaeger, percBeute, MooreUmfeld: str = "Normal", seed
     percBeute=percBeute/100
     percWiese=1-percJaeger-percBeute
 
+    if MooreUmfeld == "Normal":#Soll Umfeld erweitert werden? Wenn Ja, dann True. Default = False
+        MooreUmfeld = False
+    else: 
+        MooreUmfeld = True
+
     np.random.seed(seedX)
     
     z = np.random.choice([-1,0,1], size=(height, width), replace=True, p=[percJaeger, percWiese, percBeute])
