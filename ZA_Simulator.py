@@ -269,7 +269,7 @@ def bedingungen(
     elif JägerImUmfeld.shape[0] != 0 and BeuteImUmfeld.shape[0] / JägerImUmfeld.shape[0] > bpj and t[0] == -1: #Jäger stirbt
         t[0] = 0
               
-    elif BeuteImUmfeld.shape[0] == 0 and JägerImUmfeld.shape[0] >= gdJ and t[0] == 0 and BeutePerc >= beuteSchwelle: #Jäger geboren wenn noch prozentBeute % Beute vorhanden
+    elif BeuteImUmfeld.shape[0] == 0 and JägerImUmfeld.shape[0] >= gdJ and t[0] == 0 and BeutePerc >= beuteSchwelle/100: #Jäger geboren wenn noch prozentBeute % Beute vorhanden
         t[0] = -1
             
     elif JägerImUmfeld.shape[0] == 0 and BeuteImUmfeld.shape[0] >= gdB and t[0] == 0:#Beute geboren
