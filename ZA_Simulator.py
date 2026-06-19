@@ -218,7 +218,10 @@ def bedingungen(
     t = test.copy()
     
     BeutePerc = np.sum(Zustand0[1:-1, 1:-1]==1)/Zustand0[1:-1, 1:-1].shape[0]**2# Nur wenn noch mindestens prozentBeute Beute da ist, kann es zu Geburten von Jägern kommen.
-    
+    bSRand = 1
+    if BeutePerc < bS/100:
+        bSRand = np.random.rand(1,1)[0][0]#Damit der Abbau der Jäger nicht so schlagartig kommt.
+        
     BeuteImUmfeld = np.where(np.array(t[1:]) == 1)[0]
     JägerImUmfeld = np.where(np.array(t[1:]) == -1)[0]
     WieseImUmfeld = np.where(np.array(t[1:]) == 0)[0]
@@ -273,7 +276,7 @@ def bedingungen(
     elif JägerImUmfeld.shape[0] != 0 and BeuteImUmfeld.shape[0] / JägerImUmfeld.shape[0] > bpj and t[0] == -1: #Jäger stirbt
         t[0] = 0
               
-    elif BeuteImUmfeld.shape[0] == 0 and JägerImUmfeld.shape[0] >= gdJ and t[0] == 0 and BeutePerc >= bS/100: #Jäger geboren wenn noch prozentBeute % Beute vorhanden
+    elif BeuteImUmfeld.shape[0] == 0 and JägerImUmfeld.shape[0] >= gdJ and t[0] == 0 and BeutePerc >= bS/100*bSRand: #Jäger geboren wenn noch prozentBeute % Beute vorhanden
         t[0] = -1
             
     elif JägerImUmfeld.shape[0] == 0 and BeuteImUmfeld.shape[0] >= gdB and t[0] == 0:#Beute geboren
