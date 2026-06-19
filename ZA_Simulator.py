@@ -392,7 +392,7 @@ def SimulationPlot(simTraject):
     )
 
     simTraject = (simTraject+1)/2 #damit aus -1,0,1 -> 0,0.51 wird
-    #simTraject = simTraject[:, 2:-2, 2:-2]# Damit die Ränder nicht gezeigt werden
+    simTraject = simTraject[:, 2:-2, 2:-2]# Damit die Ränder nicht gezeigt werden
     
     hoverdata = np.where(
         simTraject == 0, "Jäger",
