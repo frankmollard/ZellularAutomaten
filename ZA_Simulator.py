@@ -71,7 +71,7 @@ with st.sidebar.form("simulation_form"):
     )  
     iterationCount = st.number_input(
         "Anzahl der Simulationsschritte\n1000 bis\n{:,} in Tausenderschritten".format(maxIter).replace(",", "."), 
-        min_value = 1000, step=1000, max_value=maxIter, format="%d", 
+        min_value = 1000, step=1000, max_value=maxIter, format="%d", value = 100000,
         help="Wieviele Änderungen sollen auf dem Feld durchgeführt werden?"
     ) 
     prozentJaeger = st.select_slider(
