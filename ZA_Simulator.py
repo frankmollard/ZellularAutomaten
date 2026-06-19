@@ -309,6 +309,19 @@ def changeMoore(r, c, UmgebungsVektor, Zustand0):
     Zn[r+1, c+1] = UmgebungsVektor[6]
     Zn[r+1, c] = UmgebungsVektor[7]
     Zn[r+1, c-1] = UmgebungsVektor[8]
+
+    if len(UmgebungsVektor) > 9:#Wenn erweiterte Moore Umgebung
+        Zn[r, c-2] = UmgebungsVektor[9]
+        Zn[r-1, c-2] = UmgebungsVektor[10]
+        Zn[r-2, c-1] = UmgebungsVektor[11]
+        Zn[r-2, c] = UmgebungsVektor[12]
+        Zn[r-2, c+1] = UmgebungsVektor[13]
+        Zn[r-1, c+2] = UmgebungsVektor[14]
+        Zn[r, c+2] = UmgebungsVektor[15]
+        Zn[r+1, c+2] = UmgebungsVektor[16]
+        Zn[r+2, c+1] = UmgebungsVektor[17]
+        Zn[r+2, c] = UmgebungsVektor[18]
+        Zn[r+2, c-1] = UmgebungsVektor[19]
     
     return Zn
 
