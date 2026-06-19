@@ -201,6 +201,9 @@ def bedingungen(
     reihenfolge: str = "Sterben -> Rennen", eG: str = "nein", bS: int = 5
 ):
     """
+    seeds: Zufalls Seed
+    test: Zellen Vektor
+    Zustand0: Matrix
     gdX: wieviele müssen für Geburt im Moore Umfeld sein
     bpj: beute pro jäger (für fressen und verteidigen)
     ww: wieviel Wiese muss für Wanderung da sein
@@ -209,6 +212,7 @@ def bedingungen(
     verhungernFaktor: Wenn kein Futter, um welchen Faktor erhöht sich die Sterblichkeit
     reihenfolge: Erst random Sterben, wenn nicht random wandern, vice versa
     eG: Ist der Jäger auch Einzelgänger? default nein.
+    bS = Beuteschwelle
     """
     
     t = test.copy()
