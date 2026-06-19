@@ -143,7 +143,7 @@ with st.sidebar.form("simulation_form"):
         ("Normal", "Erweitert"),
         help="Soll das Moore Umfeld erweitert werden?"
     )
-    prozentBeute = st.select_slider(
+    beuteSchwelle = st.select_slider(
        "Jäger keine Geburten mehr ab Beute %",
        options=list(np.linspace(0, 100, 101).astype(np.int8)),
        value=5,
@@ -269,7 +269,7 @@ def bedingungen(
     elif JägerImUmfeld.shape[0] != 0 and BeuteImUmfeld.shape[0] / JägerImUmfeld.shape[0] > bpj and t[0] == -1: #Jäger stirbt
         t[0] = 0
               
-    elif BeuteImUmfeld.shape[0] == 0 and JägerImUmfeld.shape[0] >= gdJ and t[0] == 0 and BeutePerc >= prozentBeute: #Jäger geboren wenn noch prozentBeute % Beute vorhanden
+    elif BeuteImUmfeld.shape[0] == 0 and JägerImUmfeld.shape[0] >= gdJ and t[0] == 0 and BeutePerc >= beuteSchwelle: #Jäger geboren wenn noch prozentBeute % Beute vorhanden
         t[0] = -1
             
     elif JägerImUmfeld.shape[0] == 0 and BeuteImUmfeld.shape[0] >= gdB and t[0] == 0:#Beute geboren
@@ -510,7 +510,7 @@ if st.session_state["authentication_status"]:
                         st.session_state["verhungerungsFaktor t-1"],
                         st.session_state["codeSwitch t-1"],
                         st.session_state["MooreGroß t-1"],
-                        st.session_state["prozentBeute t-1"],
+                        st.session_state["beuteSchwelle t-1"],
                         st.session_state["VerhungernProba t-1"],
                     ],
                     "Parameter t": [
@@ -529,7 +529,7 @@ if st.session_state["authentication_status"]:
                         verhungerungsFaktor,
                         codeSwitch,
                         MooreGroß,
-                        prozentBeute,
+                        beuteSchwelle,
                         np.clip(int(randomTot)/100 * verhungerungsFaktor, 0, 1) * 100,
                     ]
                 },
@@ -573,7 +573,7 @@ if st.session_state["authentication_status"]:
         st.session_state["verhungerungsFaktor t-1"] = verhungerungsFaktor
         st.session_state["codeSwitch t-1"] = codeSwitch
         st.session_state["MooreGroß t-1"] = MooreGroß
-        st.session_state["prozentBeute t-1"] = prozentBeute
+        st.session_state["beuteSchwelle t-1"] = beuteSchwelle
         st.session_state["VerhungernProba t-1"] = np.clip(int(randomTot)/100 * verhungerungsFaktor, 0, 1) * 100
         
     else:
