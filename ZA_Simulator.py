@@ -146,8 +146,8 @@ with st.sidebar.form("simulation_form"):
     beuteSchwelle = st.select_slider(
        "Jäger keine Geburten mehr ab Beute %",
        options=list(np.linspace(0, 100, 101).astype(np.int8)),
-       value=5,
-       help="Wieviel Prozent Beute müssen da sein, bevor die Jäger keine Kinder mehr bekommen, da Futter fehlt?"
+       value=0,
+       help="Wieviel Prozent Beute müssen da sein, bevor die Jäger keine Kinder mehr bekommen, da Futter fehlt?\nDefault=0. Der Parameter führt zum Sussterben der Jäger und ist mit Vorsicht\nanzuwenden."
     )
 
 
