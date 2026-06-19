@@ -310,7 +310,8 @@ def changeMoore(r, c, UmgebungsVektor, Zustand0):
     Zn[r+1, c] = UmgebungsVektor[7]
     Zn[r+1, c-1] = UmgebungsVektor[8]
 
-    if len(UmgebungsVektor) > 9:#Wenn erweiterte Moore Umgebung
+    if len(UmgebungsVektor) > 9:
+        print(True)
         Zn[r, c-2] = UmgebungsVektor[9]
         Zn[r-1, c-2] = UmgebungsVektor[10]
         Zn[r-2, c-1] = UmgebungsVektor[11]
@@ -322,8 +323,10 @@ def changeMoore(r, c, UmgebungsVektor, Zustand0):
         Zn[r+2, c+1] = UmgebungsVektor[17]
         Zn[r+2, c] = UmgebungsVektor[18]
         Zn[r+2, c-1] = UmgebungsVektor[19]
-    
+        Zn[r+1, c-2] = UmgebungsVektor[20]
+
     return Zn
+
 
 
 def trajektorie(mG, iC, percJaeger, percBeute, MooreUmfeld: str = "Normal", seedX: int = 0, **kwargs):
