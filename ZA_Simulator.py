@@ -138,13 +138,19 @@ with st.sidebar.form("simulation_form"):
         ("Verhungern -> Weggehen", "Weggehen -> Verhungern"),
         help="Hierbei handelt es sich um die Reihenfolge der Bedingungen.\nEntweder wird erst gefragt, ob der zufällige Hungertod eintritt, wenn nicht, wird danach nochmal gefragt\nob zufällig gesprungen wird, oder umgekehrt.\nTheoretisch könnte ersteres dadurch begründet werden, dass der Tod ein Binäres Ereignis ist und darüber entscheided\nob überhaupt noch ein Sprung möglich ist. Andererseits könnte man argumentieren, dass die Bewegung das Tier noch etwas länger am leben hält."
     )
+    MooreGroß = st.selectbox(
+        "Moore Umfeld",
+        ("Normal", "Erweitert"),
+        help="Soll das Moore Umfeld erweitert werden?"
+    )
 
 
-def Moore_Umgebung_read(r,c, Zustand0):
+def Moore_Umgebung_read(r,c, Zustand0, erweitert=False):
     """
     r=row
     c=column
     Zustand0=aktueller Zustand der Matrix
+    erweitert=Moore Umgebung Erweitert?
     """
 
     Zustand0 = Zustand0.copy()
@@ -159,12 +165,31 @@ def Moore_Umgebung_read(r,c, Zustand0):
     lowRight = Zustand0[r+1, c+1].tolist()
     low = Zustand0[r+1, c].tolist()
     lowLeft = Zustand0[r+1, c-1].tolist()
+
+    if erweitert:
+        leftLeft = Zustand0[r, c-2].tolist()
+        upLeftLeft = Zustand0[r-1, c-2].tolist()
+        upUpLeft = Zustand0[r-2, c-1].tolist()
+        upUp = Zustand0[r-2, c].tolist()
+        upUpRight = Zustand0[r-2, c+1].tolist()
+        upRightRight = Zustand0[r-1, c+2].tolist()
+        rightRight = Zustand0[r, c+2].tolist()
+        rightRightLow = Zustand0[r+1, c+2].tolist()
+        lowLowRight = Zustand0[r+2, c+1].tolist()
+        lowLow = Zustand0[r+2, c].tolist()
+        lowLowLeft = Zustand0[r+2, c-1].tolist()
+
+        return [target, left, upLeft, up, upRight, right, lowRight, low, lowLeft, 
+                leftLeft, upLeftLeft, upUpLeft, upUp, upUpRight, upRightRight, rightRight, 
+                rightRight, rightRightLow, lowLowRight, lowLow, lowLowLeft,
+               ]
+
     
-    return [target, left, upLeft, up, upRight, right, lowRight, low, lowLeft]
+    return [target, left, upLeft, up, upRight, right, lowRight, low, lowLeft,]
 
 
 def bedingungen(
-    seeds, test, Zustand0,
+    seeds, test, testErweitert, Zustand0,
     gdB: int = 3, gdJ: int = 3, bpj: int = 1, ww: int = 3, 
     randSprung: float = 0.1, randTot: float = 0.01, verhungernFaktor: float = 2, 
     reihenfolge: str = "Sterben -> Rennen", eG: str = "nein"
@@ -179,12 +204,15 @@ def bedingungen(
     reihenfolge: Erst random Sterben, wenn nicht random wandern, vice versa
     eG: Ist der Jäger auch Einzelgänger? default nein.
     """
-    beuteLebt = np.any(Zustand0[1:-1, 1:-1]==1) # Nur wenn noch Beute lebt, überleben auch die Jäger. Daher werden nur Jäger geboren, wenn beuteLebt
+    
     t = test.copy()
     BeuteImUmfeld = np.where(np.array(t[1:]) == 1)[0]
     JägerImUmfeld = np.where(np.array(t[1:]) == -1)[0]
     WieseImUmfeld = np.where(np.array(t[1:]) == 0)[0]
 
+    tE = testErweitert.copy()
+    BeuteImErweitertenUmfeld = np.where(np.array(tE[1:]) == 1)[0] # Nur wenn noch Beute im erweiterten Umfeld lebt, überleben auch die Jäger. Daher werden nur Jäger geboren, wenn beuteLebt
+    
     verhungern_tod = np.clip(randTot*verhungernFaktor, 0, 1).item()
     
     #random Tot
@@ -235,7 +263,7 @@ def bedingungen(
     elif JägerImUmfeld.shape[0] != 0 and BeuteImUmfeld.shape[0] / JägerImUmfeld.shape[0] > bpj and t[0] == -1: #Jäger stirbt
         t[0] = 0
               
-    elif BeuteImUmfeld.shape[0] == 0 and JägerImUmfeld.shape[0] >= gdJ and t[0] == 0 and beuteLebt: #Jäger geboren wenn noch beute vorhanden
+    elif BeuteImUmfeld.shape[0] == 0 and JägerImUmfeld.shape[0] >= gdJ and t[0] == 0 and BeuteImErweitertenUmfeld.shape[0] != 0:#Jäger geboren wenn noch beute vorhanden
         t[0] = -1
             
     elif JägerImUmfeld.shape[0] == 0 and BeuteImUmfeld.shape[0] >= gdB and t[0] == 0:#Beute geboren
@@ -279,9 +307,9 @@ def changeMoore(r, c, UmgebungsVektor, Zustand0):
     return Zn
 
 
-def trajektorie(mG, iC, percJaeger, percBeute, seedX: int = 0, **kwargs):
+def trajektorie(mG, iC, percJaeger, percBeute, MooreUmfeld: str = "Normal", seedX: int = 0, **kwargs):
     
-    width=int(mG)
+    width=int(mG+4) # Weil zwei ausgespart werden - pro Seite
     height=width
     percJaeger=percJaeger/100
     percBeute=percBeute/100
@@ -292,8 +320,8 @@ def trajektorie(mG, iC, percJaeger, percBeute, seedX: int = 0, **kwargs):
     z = np.random.choice([-1,0,1], size=(height, width), replace=True, p=[percJaeger, percWiese, percBeute])
     Z0 = z.copy()
     iterationen = iC
-    randRow = np.random.randint(1, z.shape[0]-1, maxIter)[:iterationen]#-1 bis 1, weil die Ränder wegen Moore Umgebung ausgespart werden.
-    randCol = np.random.randint(1, z.shape[0]-1, maxIter)[:iterationen]
+    randRow = np.random.randint(2, z.shape[0]-2, maxIter)[:iterationen]#-2 bis 2, weil die Ränder wegen erweiterter Moore Umgebung ausgespart werden.
+    randCol = np.random.randint(2, z.shape[0]-2, maxIter)[:iterationen]
     
     trajektorie = [Z0]
     animationFrame = np.zeros(Z0.shape[0])
@@ -306,7 +334,8 @@ def trajektorie(mG, iC, percJaeger, percBeute, seedX: int = 0, **kwargs):
             c, 
             bedingungen(
                 iterations + seedX, 
-                Moore_Umgebung_read(r, c, Z0), 
+                Moore_Umgebung_read(r, c, Z0, erweitert=MooreUmfeld), 
+                Moore_Umgebung_read(r, c, Z0, erweitert=True), 
                 Z0,
                 **kwargs
             ), 
@@ -364,7 +393,7 @@ def SimulationPlot(simTraject):
     )
 
     simTraject = (simTraject+1)/2 #damit aus -1,0,1 -> 0,0.51 wird
-    simTraject = simTraject[:, 1:-1, 1:-1]
+    simTraject = simTraject[:, 2:-2, 2:-2]# Damit die Ränder nicht gezeigt werden
     
     hoverdata = np.where(
         simTraject == 0, "Jäger",
