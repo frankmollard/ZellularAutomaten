@@ -376,9 +376,9 @@ def trajektorie(mG, iC, percJaeger, percBeute, MooreUmfeld: str = "Normal", seed
 
         persistIter = iterationen / resolutionChart
         if iterations % persistIter == 0: # genau resolutionChart mal wird W, J, B gespeichert
-            W.append(np.where(np.reshape(Z0[2:-2, 2:-2], shape=(-1)) == 0)[0].shape[0]/(height*width))
-            J.append(np.where(np.reshape(Z0[2:-2, 2:-2], shape=(-1)) == -1)[0].shape[0]/(height*width))
-            B.append(np.where(np.reshape(Z0[2:-2, 2:-2], shape=(-1)) == 1)[0].shape[0]/(height*width))
+            W.append(np.where(np.reshape(Z0[2:-2, 2:-2], shape=(-1)) == 0)[0].shape[0]/(int(mG)**2))
+            J.append(np.where(np.reshape(Z0[2:-2, 2:-2], shape=(-1)) == -1)[0].shape[0]/(int(mG)**2))
+            B.append(np.where(np.reshape(Z0[2:-2, 2:-2], shape=(-1)) == 1)[0].shape[0]/(int(mG)**2))
 
         persistIter = iterationen / resolutionHeat
         if iterations % persistIter == 0: # genau resolutionHeat mal wird Z0 gespeichert
