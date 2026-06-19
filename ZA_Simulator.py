@@ -595,7 +595,7 @@ if st.session_state["authentication_status"]:
         st.session_state["randomTot t-1"] = randomTot
         st.session_state["verhungerungsFaktor t-1"] = verhungerungsFaktor
         st.session_state["codeSwitch t-1"] = codeSwitch
-        st.session_state["MooreGross t-1"] = MooreGross
+        st.session_state["MooreGross t-1"] = MooreGross 
         st.session_state["beuteSchwelle t-1"] = beuteSchwelle
         st.session_state["VerhungernProba t-1"] = np.clip(int(randomTot)/100 * verhungerungsFaktor, 0, 1) * 100
         
