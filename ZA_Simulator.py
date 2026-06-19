@@ -356,7 +356,7 @@ def trajektorie(mG, iC, percJaeger, percBeute, MooreUmfeld: str = "Normal", seed
     randRow = np.random.randint(2, z.shape[0]-2, maxIter)[:iterationen]#-2 bis 2, weil die Ränder wegen erweiterter Moore Umgebung ausgespart werden.
     randCol = np.random.randint(2, z.shape[0]-2, maxIter)[:iterationen]
     
-    trajektorie = [Z0]
+    trajektorie = [Z0[2:-2, 2:-2]]
     animationFrame = np.zeros(Z0.shape[0])
     
     W, J, B=[], [], []
@@ -376,13 +376,13 @@ def trajektorie(mG, iC, percJaeger, percBeute, MooreUmfeld: str = "Normal", seed
 
         persistIter = iterationen / resolutionChart
         if iterations % persistIter == 0: # genau resolutionChart mal wird W, J, B gespeichert
-            W.append(np.where(np.reshape(Z0, shape=(-1)) == 0)[0].shape[0]/(height*width))
-            J.append(np.where(np.reshape(Z0, shape=(-1)) == -1)[0].shape[0]/(height*width))
-            B.append(np.where(np.reshape(Z0, shape=(-1)) == 1)[0].shape[0]/(height*width))
+            W.append(np.where(np.reshape(Z0[2:-2, 2:-2], shape=(-1)) == 0)[0].shape[0]/(height*width))
+            J.append(np.where(np.reshape(Z0[2:-2, 2:-2], shape=(-1)) == -1)[0].shape[0]/(height*width))
+            B.append(np.where(np.reshape(Z0[2:-2, 2:-2], shape=(-1)) == 1)[0].shape[0]/(height*width))
 
         persistIter = iterationen / resolutionHeat
         if iterations % persistIter == 0: # genau resolutionHeat mal wird Z0 gespeichert
-            trajektorie.append(Z0.copy())
+            trajektorie.append(Z0[2:-2, 2:-2].copy())
 
         if iterations % 100 == 0:
             progress = (iterations + 100) / iterationen
@@ -425,7 +425,6 @@ def SimulationPlot(simTraject):
     )
 
     simTraject = (simTraject+1)/2 #damit aus -1,0,1 -> 0,0.51 wird
-    simTraject = simTraject[:, 2:-2, 2:-2]# Damit die Ränder nicht gezeigt werden
     
     hoverdata = np.where(
         simTraject == 0, "Jäger",
