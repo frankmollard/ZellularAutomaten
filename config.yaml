@@ -12,7 +12,7 @@ credentials:
     student:
       email: xyz@uni-due.de
       name: Student
-      password: AIAL
+      password: AIALStudent
 cookie:
   expiry_days: 0
   key: random_signature_key # Must be string
