@@ -409,7 +409,7 @@ def attraktorPlot(wbj, iC, bS = 0):
     persistIter = iterationen / 10
     xlabels = [ic for ic in range(iterationen + 1) if ic % persistIter == 0]
     fig, ax = plt.subplots(figsize=(10, 4))
-    ax.set_title("Attraktor")
+    ax.set_title("Entwicklung über {:,}".format(iterationen).replace(",", "."))
     ax.plot(np.array(wbj["Wiese"])*100, c="green", label= "Wiese")
     ax.plot(np.array(wbj["Beute"])*100, c="orange", label= "Beute")
     ax.plot(np.array(wbj["Jaeger"])*100, c="red", label= "Jäger")
