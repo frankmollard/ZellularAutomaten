@@ -404,18 +404,21 @@ def trajektorie(mG, iC, percJaeger, percBeute, MooreUmfeld: str = "Normal", seed
     return {"Trajektorie": np.array(trajektorie), "Wiese": W, "Beute": B, "Jaeger": J}
 
 @st.cache_data(show_spinner=False)
-def attraktorPlot(wbj, iC):
+def attraktorPlot(wbj, iC, bS = 0):
     iterationen = iC
     persistIter = iterationen / 10
     xlabels = [ic for ic in range(iterationen + 1) if ic % persistIter == 0]
     fig, ax = plt.subplots(figsize=(10, 4))
-    ax.set_title("Entwicklung über {:,} Iterationen".format(iterationen).replace(",", "."))
-    ax.plot(wbj["Wiese"], c="green", label= "Wiese")
-    ax.plot(wbj["Beute"], c="orange", label= "Beute")
-    ax.plot(wbj["Jaeger"], c="red", label= "Jäger")
+    ax.set_title("Attraktor")
+    ax.plot(np.array(wbj["Wiese"])*100, c="green", label= "Wiese")
+    ax.plot(np.array(wbj["Beute"])*100, c="orange", label= "Beute")
+    ax.plot(np.array(wbj["Jaeger"])*100, c="red", label= "Jäger")
+    if bS != 0:
+        ax.axhline(y=bS*100, xmin=0, xmax=iterationen, c="grey", ls="--", lw=1, label="Beute\nSchwelle")
     ax.set_xticks([i*100 for i in list(range(len(xlabels)))])
     ax.set_xticklabels(xlabels)
     ax.tick_params(axis='x', labelrotation=45)
+    ax.set_ylabel("%")
     ax.spines["top"].set_visible(False); ax.spines['right'].set_visible(False)
     ax.legend()
     return fig
@@ -528,7 +531,7 @@ if st.session_state["authentication_status"]:
                     
         if "TRAJECTORIE" in st.session_state:
             # Display the plots in Streamlit
-            st.pyplot(attraktorPlot(st.session_state["TRAJECTORIE"], iterationCount), width="content")
+            st.pyplot(attraktorPlot(st.session_state["TRAJECTORIE"], iterationCount, beuteSchwelle/100), width="content")
             st.plotly_chart(SimulationPlot(st.session_state["TRAJECTORIE"]["Trajektorie"]))
 
         if "matrixGroesse t-1" in st.session_state:
