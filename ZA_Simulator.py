@@ -60,7 +60,7 @@ with st.sidebar.form("simulation_form"):
     submitted = st.form_submit_button("Simulieren", help="Simulation begint mit Druck auf den 'Simulieren'-Button")
     
     seedNo = st.number_input(
-        "Insert a seed", min_value = 0, step=1, format="%d", 
+        "Seed setzen", min_value = 0, step=1, format="%d", 
         help="Der Seed steuert die Zufallszahlen. Gleicher Seed bedeutet gleiche Simulation."
     )
     matrixGroesse = st.select_slider(
