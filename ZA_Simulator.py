@@ -86,23 +86,34 @@ with st.sidebar.form("simulation_form"):
        value=15,
        help="Anteil der Beutetiere auf dem Feld zu Beginn der Simulation.\n100 - Jäger - Beute = Wiese"
     )  
+    MooreGross = st.selectbox(
+        "Moore Umfeld",
+        ("Normal", "Erweitert"),
+        help="Soll das Moore Umfeld erweitert werden?"
+    )
+    
+    if MooreGross == "Normal":
+        Ausschalten = 8+1
+    else:
+        Ausschalten = 8+13
+        
     geburtenBeute = st.select_slider(
        "Wieviele Beutetiere müssen für\neine Geburt im Umfeld sein\nund keine Jäger",
-       options=list(np.linspace(2, 9, 8).astype(np.int8)),
+       options=list(np.linspace(2, Ausschalten, Ausschalten-1).astype(np.int8)),
        value=3,
-       help="Wenn keine Jäger in der Nähe sind und stören, und mindestens X Beutetiere da sind,\nmindestens natürlich zwei, aber ggf. auch mehr, die Wache stehen, dann kann ein Beutetier geboren werden.\nWichtig: dies gilt nur, wenn der Zellkern Wiese ist.\nWenn 9 dann sind Geburten ausgeschaltet, da das Moore Umfeld nur 8 Elemente hat - Die Bedingung würde somit nie erfüllt."
+       help=f"Wenn keine Jäger in der Nähe sind und stören, und mindestens X Beutetiere da sind,\nmindestens natürlich zwei, aber ggf. auch mehr, die Wache stehen, dann kann ein Beutetier geboren werden.\nWichtig: dies gilt nur, wenn der Zellkern Wiese ist.\nWenn {Ausschalten} dann sind Geburten ausgeschaltet, da das Moore Umfeld nur 8 Elemente hat - Die Bedingung würde somit nie erfüllt."
     )
     geburtenJaeger = st.select_slider(
        "Wieviele Raubtiere müssen für\neine Geburt im Umfeld sein\nund keine Beute",
-       options=list(np.linspace(2, 9, 8).astype(np.int8)),
+       options=list(np.linspace(2, Ausschalten, Ausschalten-1).astype(np.int8)),
        value=3,
-       help="Wenn keine Beutetiere in der Nähe sind und stören, und mindestens X Jäger da sind\nmindestens natürlich zwei, aber ggf. auch mehr, die Wache stehen, dann kann ein Jäger geboren werden.\nWichtig: dies gilt nur, wenn der Zellkern Wiese ist.\nWenn 9 dann sind Geburten ausgeschaltet, da das Moore Umfeld nur 8 Elemente hat - Die Bedingung würde somit nie erfüllt."
+       help="Wenn keine Beutetiere in der Nähe sind und stören, und mindestens X Jäger da sind\nmindestens natürlich zwei, aber ggf. auch mehr, die Wache stehen, dann kann ein Jäger geboren werden.\nWichtig: dies gilt nur, wenn der Zellkern Wiese ist.\nWenn {Ausschalten} dann sind Geburten ausgeschaltet, da das Moore Umfeld nur 8 Elemente hat - Die Bedingung würde somit nie erfüllt."
     )
     beuteProJaeger = st.select_slider(
        "Beute pro Jäger (für fressen und verteidigen)",
-       options=list(np.linspace(0, 8, 33).astype(np.float16)),
+       options=list(np.linspace(0, Ausschalten - 1, (Ausschalten - 1) * 4 + 1).astype(np.float16)),
        value=1.5,
-       help="Bis zu welchem prozentualen Anteil Beute pro Jäger kann sich ein Jäger gegen Beute durchsetzen.\n Beispiel: Wenn der Anteil bei 1 liegt, also z.B. 2x Beute und 2xJäger im Umfeld dann gewinnt der Jäger und tötet die Beute.\n ansonsten ist es andersherum."
+       help="Bis zu welchem prozentualen Anteil Beute pro Jäger kann sich ein Jäger gegen Beute durchsetzen.\n Beispiel: Wenn der Anteil bei 1 liegt, also z.B. 2x Beute und 2xJäger im Umfeld dann gewinnt der Jäger und tötet die Beute.\n ansonsten ist es andersherum. Bei {Ausschalten - 1} gewinnt immer der Jäger."
     )
     einzelGaenger = st.selectbox(
         "Sind Jäger auch Einzelgänger?",
@@ -111,43 +122,38 @@ with st.sidebar.form("simulation_form"):
     )
     wieseWandern = st.select_slider(
        "Wieviel Wiese muss für Beutewanderung da sein?",
-       options=list(np.linspace(1, 8, 8).astype(np.int8)),
+       options=list(np.linspace(1, Ausschalten, Ausschalten).astype(np.int8)),
        value=2,
-       help="Wieviele Elemente im Umfeld müssen freie Wiese sein, um eine Wanderung der Beute in das Moor Umfeld zu ermöglichen?"
+       help="Wieviele Elemente im Umfeld müssen freie Wiese sein, um eine Wanderung der Beute in das Moor Umfeld zu ermöglichen? Bei {Ausschalten} ist die Bedingung ausgeschaltet."
     )
     randomSprung = st.select_slider(
        "Wahrscheinlichkeit für zufälligen Sprung in %",
        options=list(np.linspace(0, 100, 11).astype(np.int8)),
        value=20,
-       help="Wie hoch ist die Wahrscheinlichkeit, dass ein Tier, egal welches in das Moore Umfeld wandert?"
+       help="Wie hoch ist die Wahrscheinlichkeit, dass ein Tier, egal welches in das Moore Umfeld wandert? Bei Null ist die Bedinung wirkungslos."
     )
     randomTot = st.select_slider(
        "Wahrscheinlichkeit für zufälliges Sterben in %",
        options=list(np.linspace(0, 100, 101).astype(np.int8)),
        value=20,
-       help="Wahrscheinlichkeit für zufälligen Tod eines Tieres."
+       help="Wahrscheinlichkeit für zufälligen Tod eines Tieres. Bei Null ist die Bedinung wirkungslos."
     )   
     verhungerungsFaktor = st.select_slider(
        "Wenn kein Futter, um welchen Faktor erhöht\nsich die Sterblichkeit (1=keine Erhöhung)",
        options=list(np.linspace(1, 10, 91).astype(np.float16)),
        value=2.5,
-       help="Um welchen Faktor erhöht sich die Wahrscheinlichkeit zu sterben, wenn kein Futter mehr da ist?\n Bei Beutetieren, wenn Wiese fehlt bei Jägern wenn Beutetiere fehlen."
+       help="Um welchen Faktor erhöht sich die Wahrscheinlichkeit zu sterben, wenn kein Futter mehr da ist?\n Bei Beutetieren, wenn Wiese fehlt bei Jägern wenn Beutetiere fehlen. Bei Null ist die Bedinung wirkungslos."
     )   
     codeSwitch = st.selectbox(
         "Verhungern oder Weggehen",
         ("Verhungern -> Weggehen", "Weggehen -> Verhungern"),
         help="Hierbei handelt es sich um die Reihenfolge der Bedingungen.\nEntweder wird erst gefragt, ob der zufällige Hungertod eintritt, wenn nicht, wird danach nochmal gefragt\nob zufällig gesprungen wird, oder umgekehrt.\nTheoretisch könnte ersteres dadurch begründet werden, dass der Tod ein Binäres Ereignis ist und darüber entscheided\nob überhaupt noch ein Sprung möglich ist. Andererseits könnte man argumentieren, dass die Bewegung das Tier noch etwas länger am leben hält.\n\nAnwendungsbeispiel:\\\nEs sei die Wahrscheinlichkeit für zufälligen Sprung $P(Sprung) = 20\%$ und die Wahrscheinlichkeit für\nVerhungern bei $P(verhungern) = 40\%$. Wenn Verhungern -> Weggehen eingestellt ist, ist $P(verhungern) = 40\%$ und nicht zu verhungern, also $P(\lnot verhungern)$, bei $100\%-P(verhungern) = 60\%$. $P(\lnot verhungern \land Sprung)$ liegt demnach bei 60% * 20% = 12%.\n Wenn aber Weggehen -> Verhungern eingestellt ist, ist $P(Sprung) = 20\%$.\nFolglich wird zu 80% nicht gesprungen ($P(\lnot Sprung)$).\n Die Wahrscheinlichkeit $P(\lnot Sprung \land verhungern)$ liegt also bei 80% * 40% = 32%."
     )
-    MooreGross = st.selectbox(
-        "Moore Umfeld",
-        ("Normal", "Erweitert"),
-        help="Soll das Moore Umfeld erweitert werden?"
-    )
     beuteSchwelle = st.select_slider(
        "Jäger keine Geburten mehr ab Beute %",
        options=list(np.linspace(0, 100, 101).astype(np.int8)),
        value=0,
-       help="Wieviel Prozent Beute müssen da sein, bevor die Jäger keine Kinder mehr bekommen, da Futter fehlt?\nDefault=0. Der Parameter führt zum Aussterben der Jäger und ist mit Vorsicht\nanzuwenden."
+       help="Wieviel Prozent Beute müssen da sein, bevor die Jäger keine Kinder mehr bekommen, da Futter fehlt?\nDefault = 0 und somit ausgeschaltet. Der Parameter führt zum Aussterben der Jäger und ist mit Vorsicht\nanzuwenden."
     )
 
 
@@ -511,6 +517,7 @@ if st.session_state["authentication_status"]:
                         iC=iterationCount, 
                         percJaeger=prozentJaeger, 
                         percBeute=prozentBeute, 
+                        MooreUmfeld = MooreGross,
                         seedX = seedNo,
                         gdB = geburtenBeute,
                         gdJ = geburtenJaeger,
@@ -521,7 +528,6 @@ if st.session_state["authentication_status"]:
                         verhungernFaktor=verhungerungsFaktor,
                         reihenfolge = codeSwitch,
                         eG = einzelGaenger,
-                        MooreUmfeld = MooreGross,
                         bS  = beuteSchwelle
                     )
                     state.update(label="Simulation vollendet!", state="complete", expanded=False)
@@ -543,6 +549,7 @@ if st.session_state["authentication_status"]:
                         st.session_state["iterationCount t-1"], 
                         st.session_state["prozentJaeger t-1"],
                         st.session_state["prozentBeute t-1"],
+                        st.session_state["MooreGross t-1"],                     
                         st.session_state["geburtenBeute t-1"],
                         st.session_state["geburtenJaeger t-1"],
                         st.session_state["beuteProJaeger t-1"],
@@ -552,7 +559,6 @@ if st.session_state["authentication_status"]:
                         st.session_state["randomTot t-1"],
                         st.session_state["verhungerungsFaktor t-1"],
                         st.session_state["codeSwitch t-1"],
-                        st.session_state["MooreGross t-1"],
                         st.session_state["beuteSchwelle t-1"],
                         st.session_state["VerhungernProba t-1"],
                     ],
@@ -562,6 +568,7 @@ if st.session_state["authentication_status"]:
                         iterationCount,
                         prozentJaeger,
                         prozentBeute,
+                        MooreGross,
                         geburtenBeute,
                         geburtenJaeger,
                         beuteProJaeger,
@@ -571,7 +578,6 @@ if st.session_state["authentication_status"]:
                         randomTot,
                         verhungerungsFaktor,
                         codeSwitch,
-                        MooreGross,
                         beuteSchwelle,
                         np.clip(int(randomTot)/100 * verhungerungsFaktor, 0, 1) * 100,
                     ]
@@ -582,6 +588,7 @@ if st.session_state["authentication_status"]:
                     "Iterationen",
                     "Start % Jäger",
                     "Start % Beute",
+                    "Moore Umfeld",
                     "Geburten Beute",
                     "Geburten Jäger",
                     "Beute pro Jäger",
@@ -591,7 +598,6 @@ if st.session_state["authentication_status"]:
                     "Zufall Tot",
                     "Verhungern Faktor",
                     "Sterben oder rennen",
-                    "Moore Umfeld",
                     "Beute % keine Jäger mehr",
                     "Verhungern Risiko in %",
                 ]
@@ -605,6 +611,7 @@ if st.session_state["authentication_status"]:
         st.session_state["iterationCount t-1"] = iterationCount
         st.session_state["prozentJaeger t-1"] = prozentJaeger
         st.session_state["prozentBeute t-1"] = prozentBeute
+        st.session_state["MooreGross t-1"] = MooreGross 
         st.session_state["seedNo t-1"] = seedNo
         st.session_state["geburtenBeute t-1"] = geburtenBeute
         st.session_state["geburtenJaeger t-1"] = geburtenJaeger
@@ -615,7 +622,6 @@ if st.session_state["authentication_status"]:
         st.session_state["randomTot t-1"] = randomTot
         st.session_state["verhungerungsFaktor t-1"] = verhungerungsFaktor
         st.session_state["codeSwitch t-1"] = codeSwitch
-        st.session_state["MooreGross t-1"] = MooreGross 
         st.session_state["beuteSchwelle t-1"] = beuteSchwelle
         st.session_state["VerhungernProba t-1"] = np.clip(int(randomTot)/100 * verhungerungsFaktor, 0, 1) * 100
         
