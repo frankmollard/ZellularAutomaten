@@ -101,13 +101,13 @@ with st.sidebar.form("simulation_form"):
        "Wieviele Beutetiere müssen für\neine Geburt im Umfeld sein\nund keine Jäger",
        options=list(np.linspace(2, Ausschalten, Ausschalten-1).astype(np.int8)),
        value=3,
-       help=f"Wenn keine Jäger in der Nähe sind und stören, und mindestens X Beutetiere da sind,\nmindestens natürlich zwei, aber ggf. auch mehr, die Wache stehen, dann kann ein Beutetier geboren werden.\nWichtig: dies gilt nur, wenn der Zellkern Wiese ist.\nWenn {Ausschalten} dann sind Geburten ausgeschaltet, da das Moore Umfeld nur 8 Elemente hat - Die Bedingung würde somit nie erfüllt."
+       help=f"Wenn keine Jäger in der Nähe sind und stören, und mindestens X Beutetiere da sind,\nmindestens natürlich zwei, aber ggf. auch mehr, die Wache stehen, dann kann ein Beutetier geboren werden.\nWichtig: dies gilt nur, wenn der Zellkern Wiese ist.\nWenn {Ausschalten} dann sind Geburten ausgeschaltet, da das Moore Umfeld nur {Ausschalten - 1} Elemente hat - Die Bedingung würde somit nie erfüllt."
     )
     geburtenJaeger = st.select_slider(
        "Wieviele Raubtiere müssen für\neine Geburt im Umfeld sein\nund keine Beute",
        options=list(np.linspace(2, Ausschalten, Ausschalten-1).astype(np.int8)),
        value=3,
-       help=f"Wenn keine Beutetiere in der Nähe sind und stören, und mindestens X Jäger da sind\nmindestens natürlich zwei, aber ggf. auch mehr, die Wache stehen, dann kann ein Jäger geboren werden.\nWichtig: dies gilt nur, wenn der Zellkern Wiese ist.\nWenn {Ausschalten} dann sind Geburten ausgeschaltet, da das Moore Umfeld nur 8 Elemente hat - Die Bedingung würde somit nie erfüllt."
+       help=f"Wenn keine Beutetiere in der Nähe sind und stören, und mindestens X Jäger da sind\nmindestens natürlich zwei, aber ggf. auch mehr, die Wache stehen, dann kann ein Jäger geboren werden.\nWichtig: dies gilt nur, wenn der Zellkern Wiese ist.\nWenn {Ausschalten} dann sind Geburten ausgeschaltet, da das Moore Umfeld nur {Ausschalten - 1} Elemente hat - Die Bedingung würde somit nie erfüllt."
     )
     beuteProJaeger = st.select_slider(
        "Beute pro Jäger (für fressen und verteidigen)",
