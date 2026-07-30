@@ -591,7 +591,7 @@ if st.session_state["authentication_status"]:
                     "Zufall Tot",
                     "Verhungern Faktor",
                     "Sterben oder rennen",
-                    "Erweitetes Moore Umfeld",
+                    "Moore Umfeld",
                     "Beute % keine Jäger mehr",
                     "Verhungern Risiko in %",
                 ]
