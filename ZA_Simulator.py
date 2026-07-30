@@ -515,11 +515,11 @@ if st.session_state["authentication_status"]:
                 status_text = st.empty()
                 try:
                     st.session_state["TRAJECTORIE"] = trajektorie(
+                        MooreUmfeld = MooreGross,
                         mG=matrixGroesse, 
                         iC=iterationCount, 
                         percJaeger=prozentJaeger, 
                         percBeute=prozentBeute, 
-                        MooreUmfeld = MooreGross,
                         seedX = seedNo,
                         gdB = geburtenBeute,
                         gdJ = geburtenJaeger,
@@ -546,12 +546,12 @@ if st.session_state["authentication_status"]:
             letzteEingabe = pd.DataFrame(
                 {
                     "Parameter t-1": [
+                        st.session_state["MooreGross t-1"],  
                         st.session_state["matrixGroesse t-1"],
                         st.session_state["seedNo t-1"],
                         st.session_state["iterationCount t-1"], 
                         st.session_state["prozentJaeger t-1"],
-                        st.session_state["prozentBeute t-1"],
-                        st.session_state["MooreGross t-1"],                     
+                        st.session_state["prozentBeute t-1"],                   
                         st.session_state["geburtenBeute t-1"],
                         st.session_state["geburtenJaeger t-1"],
                         st.session_state["beuteProJaeger t-1"],
@@ -565,12 +565,12 @@ if st.session_state["authentication_status"]:
                         st.session_state["VerhungernProba t-1"],
                     ],
                     "Parameter t": [
+                        MooreGross,
                         matrixGroesse,
                         seedNo,
                         iterationCount,
                         prozentJaeger,
                         prozentBeute,
-                        MooreGross,
                         geburtenBeute,
                         geburtenJaeger,
                         beuteProJaeger,
@@ -585,12 +585,12 @@ if st.session_state["authentication_status"]:
                     ]
                 },
                 index=[
+                    "Moore Umfeld",
                     "Matrix Größe",
                     "Seed",
                     "Iterationen",
                     "Start % Jäger",
                     "Start % Beute",
-                    "Moore Umfeld",
                     "Geburten Beute",
                     "Geburten Jäger",
                     "Beute pro Jäger",
@@ -608,12 +608,12 @@ if st.session_state["authentication_status"]:
             st.text("Letzte und aktuelle Eingabe")
             letzteEingabe = letzteEingabe.astype(str)
             st.table(letzteEingabe)
-
+            
+        st.session_state["MooreGross t-1"] = MooreGross 
         st.session_state["matrixGroesse t-1"] = matrixGroesse
         st.session_state["iterationCount t-1"] = iterationCount
         st.session_state["prozentJaeger t-1"] = prozentJaeger
         st.session_state["prozentBeute t-1"] = prozentBeute
-        st.session_state["MooreGross t-1"] = MooreGross 
         st.session_state["seedNo t-1"] = seedNo
         st.session_state["geburtenBeute t-1"] = geburtenBeute
         st.session_state["geburtenJaeger t-1"] = geburtenJaeger
