@@ -116,13 +116,13 @@ with st.sidebar.form("simulation_form"):
        help="Wieviele Elemente im Umfeld müssen freie Wiese sein, um eine Wanderung der Beute in das Moor Umfeld zu ermöglichen?"
     )
     randomSprung = st.select_slider(
-       "Wahrscheinlichkeit für zufälligen Sprung",
+       "Wahrscheinlichkeit für zufälligen Sprung in %",
        options=list(np.linspace(0, 100, 11).astype(np.int8)),
        value=20,
        help="Wie hoch ist die Wahrscheinlichkeit, dass ein Tier, egal welches in das Moore Umfeld wandert?"
     )
     randomTot = st.select_slider(
-       "Wahrscheinlichkeit für zufälliges Sterben",
+       "Wahrscheinlichkeit für zufälliges Sterben in %",
        options=list(np.linspace(0, 100, 101).astype(np.int8)),
        value=20,
        help="Wahrscheinlichkeit für zufälligen Tod eines Tieres."
