@@ -107,13 +107,13 @@ with st.sidebar.form("simulation_form"):
        "Wieviele Raubtiere müssen für\neine Geburt im Umfeld sein\nund keine Beute",
        options=list(np.linspace(2, Ausschalten, Ausschalten-1).astype(np.int8)),
        value=3,
-       help="Wenn keine Beutetiere in der Nähe sind und stören, und mindestens X Jäger da sind\nmindestens natürlich zwei, aber ggf. auch mehr, die Wache stehen, dann kann ein Jäger geboren werden.\nWichtig: dies gilt nur, wenn der Zellkern Wiese ist.\nWenn {Ausschalten} dann sind Geburten ausgeschaltet, da das Moore Umfeld nur 8 Elemente hat - Die Bedingung würde somit nie erfüllt."
+       help=f"Wenn keine Beutetiere in der Nähe sind und stören, und mindestens X Jäger da sind\nmindestens natürlich zwei, aber ggf. auch mehr, die Wache stehen, dann kann ein Jäger geboren werden.\nWichtig: dies gilt nur, wenn der Zellkern Wiese ist.\nWenn {Ausschalten} dann sind Geburten ausgeschaltet, da das Moore Umfeld nur 8 Elemente hat - Die Bedingung würde somit nie erfüllt."
     )
     beuteProJaeger = st.select_slider(
        "Beute pro Jäger (für fressen und verteidigen)",
        options=list(np.linspace(0, Ausschalten - 1, (Ausschalten - 1) * 4 + 1).astype(np.float16)),
        value=1.5,
-       help="Bis zu welchem prozentualen Anteil Beute pro Jäger kann sich ein Jäger gegen Beute durchsetzen.\n Beispiel: Wenn der Anteil bei 1 liegt, also z.B. 2x Beute und 2xJäger im Umfeld dann gewinnt der Jäger und tötet die Beute.\n ansonsten ist es andersherum. Bei {Ausschalten - 1} gewinnt immer der Jäger."
+       help=f"Bis zu welchem prozentualen Anteil Beute pro Jäger kann sich ein Jäger gegen Beute durchsetzen.\n Beispiel: Wenn der Anteil bei 1 liegt, also z.B. 2x Beute und 2xJäger im Umfeld dann gewinnt der Jäger und tötet die Beute.\n ansonsten ist es andersherum. Bei {Ausschalten - 1} gewinnt immer der Jäger."
     )
     einzelGaenger = st.selectbox(
         "Sind Jäger auch Einzelgänger?",
@@ -124,7 +124,7 @@ with st.sidebar.form("simulation_form"):
        "Wieviel Wiese muss für Beutewanderung da sein?",
        options=list(np.linspace(1, Ausschalten, Ausschalten).astype(np.int8)),
        value=2,
-       help="Wieviele Elemente im Umfeld müssen freie Wiese sein, um eine Wanderung der Beute in das Moor Umfeld zu ermöglichen? Bei {Ausschalten} ist die Bedingung ausgeschaltet."
+       help=f"Wieviele Elemente im Umfeld müssen freie Wiese sein, um eine Wanderung der Beute in das Moor Umfeld zu ermöglichen? Bei {Ausschalten} ist die Bedingung ausgeschaltet."
     )
     randomSprung = st.select_slider(
        "Wahrscheinlichkeit für zufälligen Sprung in %",
