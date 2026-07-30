@@ -100,7 +100,7 @@ with st.sidebar.form("simulation_form"):
     )
     beuteProJaeger = st.select_slider(
        "Beute pro Jäger (für fressen und verteidigen)",
-       options=list(np.linspace(0, 2, 21).astype(np.float16)),
+       options=list(np.linspace(0, 8, 33).astype(np.float16)),
        value=1.7,
        help="Bis zu welchem prozentualen Anteil Beute pro Jäger kann sich ein Jäger gegen Beute durchsetzen.\n Beispiel: Wenn der Anteil bei 1 liegt, also z.B. 2x Beute und 2xJäger im Umfeld dann gewinnt der Jäger und tötet die Beute.\n ansonsten ist es andersherum."
     )
