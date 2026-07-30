@@ -51,41 +51,12 @@ st.markdown(
 )
 
 #########SIDEBAR###########
-with st.sidebar.form("simulation_form"):
+with st.sidebar:
     st.image("vawiaial.png", width = 120)
     """
     
     
     """
-    submitted = st.form_submit_button("Simulieren", help="Simulation begint mit Druck auf den 'Simulieren'-Button")
-    
-    seedNo = st.number_input(
-        "Seed setzen", min_value = 0, step=1, format="%d", 
-        help="Der Seed steuert die Zufallszahlen. Gleicher Seed bedeutet gleiche Simulation."
-    )
-    matrixGroesse = st.select_slider(
-       "Größe der Matrix",
-       options=list(np.linspace(10, 50, 40).astype(np.int8)),
-       value=30,
-       help="Größer der symmetrischen Matrix wählen."
-    )  
-    iterationCount = st.number_input(
-        "Anzahl der Simulationsschritte\n1000 bis\n{:,} in Tausenderschritten".format(maxIter).replace(",", "."), 
-        min_value = 1000, step=1000, max_value=maxIter, format="%d", value = 100000,
-        help="Wieviele Änderungen sollen auf dem Feld durchgeführt werden?"
-    ) 
-    prozentJaeger = st.select_slider(
-       "Anteil Jäger zu Beginn in %",
-       options=list(np.linspace(1, 100, 101).astype(np.int8)),
-       value=15,
-       help="Anteil der Jäger auf dem Feld zu Beginn der Simulation.\n100 - Jäger - Beute = Wiese"
-    )  
-    prozentBeute = st.select_slider(
-       "Anteil Beute zu Beginn in %",
-       options=list(np.linspace(1, 100, 101).astype(np.int8)),
-       value=15,
-       help="Anteil der Beutetiere auf dem Feld zu Beginn der Simulation.\n100 - Jäger - Beute = Wiese"
-    )  
     MooreGross = st.selectbox(
         "Moore Umfeld",
         ("Normal", "Erweitert"),
@@ -96,65 +67,96 @@ with st.sidebar.form("simulation_form"):
         Ausschalten = 8+1
     else:
         Ausschalten = 8+13
+ 
+    with st.form("simulation_form"):
+    
+        submitted = st.form_submit_button("Simulieren", help="Simulation begint mit Druck auf den 'Simulieren'-Button")
         
-    geburtenBeute = st.select_slider(
-       "Wieviele Beutetiere müssen für\neine Geburt im Umfeld sein\nund keine Jäger",
-       options=list(np.linspace(2, Ausschalten, Ausschalten-1).astype(np.int8)),
-       value=3,
-       help=f"Wenn keine Jäger in der Nähe sind und stören, und mindestens X Beutetiere da sind,\nmindestens natürlich zwei, aber ggf. auch mehr, die Wache stehen, dann kann ein Beutetier geboren werden.\nWichtig: dies gilt nur, wenn der Zellkern Wiese ist.\nWenn {Ausschalten} dann sind Geburten ausgeschaltet, da das Moore Umfeld nur {Ausschalten - 1} Elemente hat - Die Bedingung würde somit nie erfüllt."
-    )
-    geburtenJaeger = st.select_slider(
-       "Wieviele Raubtiere müssen für\neine Geburt im Umfeld sein\nund keine Beute",
-       options=list(np.linspace(2, Ausschalten, Ausschalten-1).astype(np.int8)),
-       value=3,
-       help=f"Wenn keine Beutetiere in der Nähe sind und stören, und mindestens X Jäger da sind\nmindestens natürlich zwei, aber ggf. auch mehr, die Wache stehen, dann kann ein Jäger geboren werden.\nWichtig: dies gilt nur, wenn der Zellkern Wiese ist.\nWenn {Ausschalten} dann sind Geburten ausgeschaltet, da das Moore Umfeld nur {Ausschalten - 1} Elemente hat - Die Bedingung würde somit nie erfüllt."
-    )
-    beuteProJaeger = st.select_slider(
-       "Beute pro Jäger (für fressen und verteidigen)",
-       options=list(np.linspace(0, Ausschalten - 1, (Ausschalten - 1) * 4 + 1).astype(np.float16)),
-       value=1.5,
-       help=f"Bis zu welchem prozentualen Anteil Beute pro Jäger kann sich ein Jäger gegen Beute durchsetzen.\n Beispiel: Wenn der Anteil bei 1 liegt, also z.B. 2x Beute und 2xJäger im Umfeld dann gewinnt der Jäger und tötet die Beute.\n ansonsten ist es andersherum. Bei {Ausschalten - 1} gewinnt immer der Jäger."
-    )
-    einzelGaenger = st.selectbox(
-        "Sind Jäger auch Einzelgänger?",
-        ("nein", "ja"),
-        help="Wenn einem Jäger ein einzelnes Beutetier begegnet und keine weiteren Jäger im Moore Umfeld sind, dann frisst der Jäger die Beute.\ndefault=nein"
-    )
-    wieseWandern = st.select_slider(
-       "Wieviel Wiese muss für Beutewanderung da sein?",
-       options=list(np.linspace(1, Ausschalten, Ausschalten).astype(np.int8)),
-       value=2,
-       help=f"Wieviele Elemente im Umfeld müssen freie Wiese sein, um eine Wanderung der Beute in das Moor Umfeld zu ermöglichen? Bei {Ausschalten} ist die Bedingung ausgeschaltet."
-    )
-    randomSprung = st.select_slider(
-       "Wahrscheinlichkeit für zufälligen Sprung in %",
-       options=list(np.linspace(0, 100, 11).astype(np.int8)),
-       value=20,
-       help="Wie hoch ist die Wahrscheinlichkeit, dass ein Tier, egal welches in das Moore Umfeld wandert? Bei Null ist die Bedinung wirkungslos."
-    )
-    randomTot = st.select_slider(
-       "Wahrscheinlichkeit für zufälliges Sterben in %",
-       options=list(np.linspace(0, 100, 101).astype(np.int8)),
-       value=20,
-       help="Wahrscheinlichkeit für zufälligen Tod eines Tieres. Bei Null ist die Bedinung wirkungslos."
-    )   
-    verhungerungsFaktor = st.select_slider(
-       "Wenn kein Futter, um welchen Faktor erhöht\nsich die Sterblichkeit (1=keine Erhöhung)",
-       options=list(np.linspace(1, 10, 91).astype(np.float16)),
-       value=2.5,
-       help="Um welchen Faktor erhöht sich die Wahrscheinlichkeit zu sterben, wenn kein Futter mehr da ist?\n Bei Beutetieren, wenn Wiese fehlt bei Jägern wenn Beutetiere fehlen. Bei Null ist die Bedinung wirkungslos."
-    )   
-    codeSwitch = st.selectbox(
-        "Verhungern oder Weggehen",
-        ("Verhungern -> Weggehen", "Weggehen -> Verhungern"),
-        help="Hierbei handelt es sich um die Reihenfolge der Bedingungen.\nEntweder wird erst gefragt, ob der zufällige Hungertod eintritt, wenn nicht, wird danach nochmal gefragt\nob zufällig gesprungen wird, oder umgekehrt.\nTheoretisch könnte ersteres dadurch begründet werden, dass der Tod ein Binäres Ereignis ist und darüber entscheided\nob überhaupt noch ein Sprung möglich ist. Andererseits könnte man argumentieren, dass die Bewegung das Tier noch etwas länger am leben hält.\n\nAnwendungsbeispiel:\\\nEs sei die Wahrscheinlichkeit für zufälligen Sprung $P(Sprung) = 20\%$ und die Wahrscheinlichkeit für\nVerhungern bei $P(verhungern) = 40\%$. Wenn Verhungern -> Weggehen eingestellt ist, ist $P(verhungern) = 40\%$ und nicht zu verhungern, also $P(\lnot verhungern)$, bei $100\%-P(verhungern) = 60\%$. $P(\lnot verhungern \land Sprung)$ liegt demnach bei 60% * 20% = 12%.\n Wenn aber Weggehen -> Verhungern eingestellt ist, ist $P(Sprung) = 20\%$.\nFolglich wird zu 80% nicht gesprungen ($P(\lnot Sprung)$).\n Die Wahrscheinlichkeit $P(\lnot Sprung \land verhungern)$ liegt also bei 80% * 40% = 32%."
-    )
-    beuteSchwelle = st.select_slider(
-       "Jäger keine Geburten mehr ab Beute %",
-       options=list(np.linspace(0, 100, 101).astype(np.int8)),
-       value=0,
-       help="Wieviel Prozent Beute müssen da sein, bevor die Jäger keine Kinder mehr bekommen, da Futter fehlt?\nDefault = 0 und somit ausgeschaltet. Der Parameter führt zum Aussterben der Jäger und ist mit Vorsicht\nanzuwenden."
-    )
+        seedNo = st.number_input(
+            "Seed setzen", min_value = 0, step=1, format="%d", 
+            help="Der Seed steuert die Zufallszahlen. Gleicher Seed bedeutet gleiche Simulation."
+        )
+        matrixGroesse = st.select_slider(
+           "Größe der Matrix",
+           options=list(np.linspace(10, 50, 40).astype(np.int8)),
+           value=30,
+           help="Größer der symmetrischen Matrix wählen."
+        )  
+        iterationCount = st.number_input(
+            "Anzahl der Simulationsschritte\n1000 bis\n{:,} in Tausenderschritten".format(maxIter).replace(",", "."), 
+            min_value = 1000, step=1000, max_value=maxIter, format="%d", value = 100000,
+            help="Wieviele Änderungen sollen auf dem Feld durchgeführt werden?"
+        ) 
+        prozentJaeger = st.select_slider(
+           "Anteil Jäger zu Beginn in %",
+           options=list(np.linspace(1, 100, 101).astype(np.int8)),
+           value=15,
+           help="Anteil der Jäger auf dem Feld zu Beginn der Simulation.\n100 - Jäger - Beute = Wiese"
+        )  
+        prozentBeute = st.select_slider(
+           "Anteil Beute zu Beginn in %",
+           options=list(np.linspace(1, 100, 101).astype(np.int8)),
+           value=15,
+           help="Anteil der Beutetiere auf dem Feld zu Beginn der Simulation.\n100 - Jäger - Beute = Wiese"
+        )  
+        geburtenBeute = st.select_slider(
+           "Wieviele Beutetiere müssen für\neine Geburt im Umfeld sein\nund keine Jäger",
+           options=list(np.linspace(2, Ausschalten, Ausschalten-1).astype(np.int8)),
+           value=3,
+           help=f"Wenn keine Jäger in der Nähe sind und stören, und mindestens X Beutetiere da sind,\nmindestens natürlich zwei, aber ggf. auch mehr, die Wache stehen, dann kann ein Beutetier geboren werden.\nWichtig: dies gilt nur, wenn der Zellkern Wiese ist.\nWenn {Ausschalten} dann sind Geburten ausgeschaltet, da das Moore Umfeld nur {Ausschalten - 1} Elemente hat - Die Bedingung würde somit nie erfüllt."
+        )
+        geburtenJaeger = st.select_slider(
+           "Wieviele Raubtiere müssen für\neine Geburt im Umfeld sein\nund keine Beute",
+           options=list(np.linspace(2, Ausschalten, Ausschalten-1).astype(np.int8)),
+           value=3,
+           help=f"Wenn keine Beutetiere in der Nähe sind und stören, und mindestens X Jäger da sind\nmindestens natürlich zwei, aber ggf. auch mehr, die Wache stehen, dann kann ein Jäger geboren werden.\nWichtig: dies gilt nur, wenn der Zellkern Wiese ist.\nWenn {Ausschalten} dann sind Geburten ausgeschaltet, da das Moore Umfeld nur {Ausschalten - 1} Elemente hat - Die Bedingung würde somit nie erfüllt."
+        )
+        beuteProJaeger = st.select_slider(
+           "Beute pro Jäger (für fressen und verteidigen)",
+           options=list(np.linspace(0, Ausschalten - 1, (Ausschalten - 1) * 4 + 1).astype(np.float16)),
+           value=1.5,
+           help=f"Bis zu welchem prozentualen Anteil Beute pro Jäger kann sich ein Jäger gegen Beute durchsetzen.\n Beispiel: Wenn der Anteil bei 1 liegt, also z.B. 2x Beute und 2xJäger im Umfeld dann gewinnt der Jäger und tötet die Beute.\n ansonsten ist es andersherum. Bei {Ausschalten - 1} gewinnt immer der Jäger."
+        )
+        einzelGaenger = st.selectbox(
+            "Sind Jäger auch Einzelgänger?",
+            ("nein", "ja"),
+            help="Wenn einem Jäger ein einzelnes Beutetier begegnet und keine weiteren Jäger im Moore Umfeld sind, dann frisst der Jäger die Beute.\ndefault=nein"
+        )
+        wieseWandern = st.select_slider(
+           "Wieviel Wiese muss für Beutewanderung da sein?",
+           options=list(np.linspace(1, Ausschalten, Ausschalten).astype(np.int8)),
+           value=2,
+           help=f"Wieviele Elemente im Umfeld müssen freie Wiese sein, um eine Wanderung der Beute in das Moor Umfeld zu ermöglichen? Bei {Ausschalten} ist die Bedingung ausgeschaltet."
+        )
+        randomSprung = st.select_slider(
+           "Wahrscheinlichkeit für zufälligen Sprung in %",
+           options=list(np.linspace(0, 100, 11).astype(np.int8)),
+           value=20,
+           help="Wie hoch ist die Wahrscheinlichkeit, dass ein Tier, egal welches in das Moore Umfeld wandert? Bei Null ist die Bedinung wirkungslos."
+        )
+        randomTot = st.select_slider(
+           "Wahrscheinlichkeit für zufälliges Sterben in %",
+           options=list(np.linspace(0, 100, 101).astype(np.int8)),
+           value=20,
+           help="Wahrscheinlichkeit für zufälligen Tod eines Tieres. Bei Null ist die Bedinung wirkungslos."
+        )   
+        verhungerungsFaktor = st.select_slider(
+           "Wenn kein Futter, um welchen Faktor erhöht\nsich die Sterblichkeit (1=keine Erhöhung)",
+           options=list(np.linspace(1, 10, 91).astype(np.float16)),
+           value=2.5,
+           help="Um welchen Faktor erhöht sich die Wahrscheinlichkeit zu sterben, wenn kein Futter mehr da ist?\n Bei Beutetieren, wenn Wiese fehlt bei Jägern wenn Beutetiere fehlen. Bei Null ist die Bedinung wirkungslos."
+        )   
+        codeSwitch = st.selectbox(
+            "Verhungern oder Weggehen",
+            ("Verhungern -> Weggehen", "Weggehen -> Verhungern"),
+            help="Hierbei handelt es sich um die Reihenfolge der Bedingungen.\nEntweder wird erst gefragt, ob der zufällige Hungertod eintritt, wenn nicht, wird danach nochmal gefragt\nob zufällig gesprungen wird, oder umgekehrt.\nTheoretisch könnte ersteres dadurch begründet werden, dass der Tod ein Binäres Ereignis ist und darüber entscheided\nob überhaupt noch ein Sprung möglich ist. Andererseits könnte man argumentieren, dass die Bewegung das Tier noch etwas länger am leben hält.\n\nAnwendungsbeispiel:\\\nEs sei die Wahrscheinlichkeit für zufälligen Sprung $P(Sprung) = 20\%$ und die Wahrscheinlichkeit für\nVerhungern bei $P(verhungern) = 40\%$. Wenn Verhungern -> Weggehen eingestellt ist, ist $P(verhungern) = 40\%$ und nicht zu verhungern, also $P(\lnot verhungern)$, bei $100\%-P(verhungern) = 60\%$. $P(\lnot verhungern \land Sprung)$ liegt demnach bei 60% * 20% = 12%.\n Wenn aber Weggehen -> Verhungern eingestellt ist, ist $P(Sprung) = 20\%$.\nFolglich wird zu 80% nicht gesprungen ($P(\lnot Sprung)$).\n Die Wahrscheinlichkeit $P(\lnot Sprung \land verhungern)$ liegt also bei 80% * 40% = 32%."
+        )
+        beuteSchwelle = st.select_slider(
+           "Jäger keine Geburten mehr ab Beute %",
+           options=list(np.linspace(0, 100, 101).astype(np.int8)),
+           value=0,
+           help="Wieviel Prozent Beute müssen da sein, bevor die Jäger keine Kinder mehr bekommen, da Futter fehlt?\nDefault = 0 und somit ausgeschaltet. Der Parameter führt zum Aussterben der Jäger und ist mit Vorsicht\nanzuwenden."
+        )
 
 
 def Moore_Umgebung_read(r,c, Zustand0, erweitert: bool=False):
