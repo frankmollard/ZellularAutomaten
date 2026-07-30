@@ -84,7 +84,7 @@ with st.sidebar:
         )  
         iterationCount = st.number_input(
             "Anzahl der Simulationsschritte\n1000 bis\n{:,} in Tausenderschritten".format(maxIter).replace(",", "."), 
-            min_value = 1000, step=1000, max_value=maxIter, format="%d", value = 100000,
+            min_value = 1000, step = 1000, max_value = maxIter, format = "%d", value = 100000,
             help="Wieviele Änderungen sollen auf dem Feld durchgeführt werden?"
         ) 
         prozentJaeger = st.select_slider(
@@ -405,7 +405,7 @@ def trajektorie(mG, iC, percJaeger, percBeute, MooreUmfeld: str = "Normal", seed
             trajektorie.append(Z0[2:-2, 2:-2].copy())
 
         if iterations % 100 == 0:
-            progress = (iterations + 100) / iterationen
+            progress = np.clip((iterations + 100) / iterationen, 0, 1)
             progress_bar.progress(progress)
             status_text.write(f"Simulation: {iterations + 100} / {iterationen}")
     
@@ -447,7 +447,7 @@ def SimulationPlot(simTraject):
         "Spezies: %{customdata}<extra></extra>"  # <extra></extra> entfernt trace name
     )
 
-    simTraject = (simTraject+1)/2 #damit aus -1,0,1 -> 0,0.51 wird
+    simTraject = (simTraject+1)/2 #damit aus -1,0,1 -> 0,0.5,1 wird
     
     hoverdata = np.where(
         simTraject == 0, "Jäger",
@@ -508,6 +508,9 @@ if st.session_state["authentication_status"]:
             if int(prozentJaeger) + int(prozentBeute) >= 100:
                 st.error(f"Jäger + Beute müssen zusammen < 100 % ergeben.\nJäger liegt bei {int(prozentJaeger)} und Beute bei {int(prozentBeute)}, also beide zusammen bei {int(prozentJaeger)+int(prozentBeute)}")
                 st.stop()
+            if iterationCount % resolutionChart != 0:
+                st.error(f"Iterationen bitte nur in {resolutionChart}er Schritten. Aktueller Wert: {iterationCount}")
+                st.stop()                
             gc.collect()
             with st.status("Simulation Läuft...", expanded=True) as state:
 
