@@ -2,7 +2,7 @@
 
 Dieses Repository enthält eine interaktive **Jäger-Beute-Simulation auf Grundlage zellulärer Automaten**. Auf einem zweidimensionalen Gitter wird untersucht, wie sich Jäger, Beutetiere und freie Wiesenflächen unter verschiedenen lokalen Regeln und Zufallseinflüssen entwickeln.
 
-Die Anwendung wurde mit [Streamlit](https://streamlit.io/) umgesetzt. Sämtliche Modellparameter können über eine grafische Benutzeroberfläche verändert werden. Die Ergebnisse werden als zeitliche Populationsentwicklung und als animierte räumliche Verteilung dargestellt.
+Die Anwendung wurde mit [Streamlit](https://streamlit.io/)](https://zellularautomaten.streamlit.app) umgesetzt. Sämtliche Modellparameter können über eine grafische Benutzeroberfläche verändert werden. Die Ergebnisse werden als zeitliche Populationsentwicklung und als animierte räumliche Verteilung dargestellt.
 
 ## Inhalt
 
