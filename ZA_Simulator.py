@@ -144,7 +144,7 @@ with st.sidebar:
            "Wenn kein Futter, um welchen Faktor erhöht\nsich die Sterblichkeit (1=keine Erhöhung)",
            options=list(np.linspace(1, 10, 91).astype(np.float16)),
            value=2.5,
-           help="Um welchen Faktor erhöht sich die Wahrscheinlichkeit zu sterben, wenn kein Futter mehr da ist?\n Bei Beutetieren, wenn Wiese fehlt bei Jägern wenn Beutetiere fehlen. Bei Null ist die Bedinung wirkungslos."
+           help="Um welchen Faktor erhöht sich die Wahrscheinlichkeit zu sterben, wenn kein Futter mehr da ist?\n Bei Beutetieren, wenn Wiese fehlt bei Jägern wenn Beutetiere fehlen. Bei Eins ist die Bedinung wirkungslos."
         )   
         codeSwitch = st.selectbox(
             "Verhungern oder Weggehen",
