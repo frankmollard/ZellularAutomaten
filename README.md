@@ -1,8 +1,8 @@
 # Zellularautomaten – Jäger-Beute-Simulation
 
-Dieses Repository enthält eine interaktive Simulation eines **Jäger-Beute-Systems mit zellulären Automaten**. Auf einem zweidimensionalen Gitter werden die zeitliche Entwicklung von Jägern, Beutetieren und freien Wiesenflächen sowie deren räumliche Verteilung untersucht.
+Dieses Repository enthält eine interaktive **Jäger-Beute-Simulation auf Grundlage zellulärer Automaten**. Auf einem zweidimensionalen Gitter wird untersucht, wie sich Jäger, Beutetiere und freie Wiesenflächen unter verschiedenen lokalen Regeln und Zufallseinflüssen entwickeln.
 
-Die Anwendung wurde mit [Streamlit](https://streamlit.io/) umgesetzt. Sämtliche Modellparameter können über eine grafische Benutzeroberfläche verändert werden. Die Ergebnisse werden als Zeitreihe und als animierte Heatmap dargestellt.
+Die Anwendung wurde mit [Streamlit](https://streamlit.io/) umgesetzt. Sämtliche Modellparameter können über eine grafische Benutzeroberfläche verändert werden. Die Ergebnisse werden als zeitliche Populationsentwicklung und als animierte räumliche Verteilung dargestellt.
 
 ## Inhalt
 
@@ -10,11 +10,11 @@ Die Anwendung wurde mit [Streamlit](https://streamlit.io/) umgesetzt. Sämtliche
 - [Zellzustände](#zellzustände)
 - [Nachbarschaften](#nachbarschaften)
 - [Simulationsregeln](#simulationsregeln)
-- [Installation](#installation)
-- [Konfiguration der Anmeldung](#konfiguration-der-anmeldung)
-- [Anwendung starten](#anwendung-starten)
-- [Bedienung und Parameter](#bedienung-und-parameter)
-- [Ergebnisse](#ergebnisse)
+- [Anwendung verwenden](#anwendung-verwenden)
+- [Parameter der Simulation](#parameter-der-simulation)
+- [Ergebnisse auswerten](#ergebnisse-auswerten)
+- [Installation und lokaler Start](#installation-und-lokaler-start)
+- [Anmeldung](#anmeldung)
 - [Aufbau des Repositories](#aufbau-des-repositories)
 - [Technische Umsetzung](#technische-umsetzung)
 - [Hinweise und Grenzen](#hinweise-und-grenzen)
@@ -23,9 +23,9 @@ Die Anwendung wurde mit [Streamlit](https://streamlit.io/) umgesetzt. Sämtliche
 
 Zelluläre Automaten bilden komplexe dynamische Systeme mithilfe einfacher lokaler Regeln ab. Das Modell besteht aus einem quadratischen Gitter. Jede Zelle repräsentiert entweder einen Jäger, ein Beutetier oder eine freie Wiesenfläche.
 
-In jedem Simulationsschritt wird zufällig eine Zelle ausgewählt. Ihr Zustand und gegebenenfalls die Zustände benachbarter Zellen werden anhand der gewählten Regeln aktualisiert. Die Aktualisierung erfolgt somit **asynchron**: Pro Schritt wird nur eine lokale Umgebung betrachtet und verändert.
+In jedem Simulationsschritt wird zufällig eine Zelle ausgewählt. Ihr Zustand und gegebenenfalls die Zustände benachbarter Zellen werden anhand der eingestellten Regeln aktualisiert. Die Aktualisierung erfolgt **asynchron**: Pro Schritt wird eine lokale Umgebung betrachtet und verändert, nicht das gesamte Gitter gleichzeitig.
 
-Das Modell ist stochastisch. Zufallsereignisse beeinflussen unter anderem Bewegung und Sterblichkeit. Über einen Seed lassen sich Simulationen dennoch reproduzieren.
+Das Modell enthält stochastische Elemente. Zufallsereignisse beeinflussen unter anderem Bewegung und Sterblichkeit. Über einen festen Seed lassen sich Simulationsläufe reproduzieren und miteinander vergleichen.
 
 ## Zellzustände
 
@@ -43,7 +43,7 @@ Der anfängliche Wiesenanteil ergibt sich aus:
 Wiesenanteil = 100 % − Jägeranteil − Beuteanteil
 ```
 
-Daher muss die Summe aus Jäger- und Beuteanteil kleiner als 100 % sein.
+Die Summe aus Jäger- und Beuteanteil muss deshalb kleiner als 100 % sein.
 
 ## Nachbarschaften
 
@@ -55,8 +55,6 @@ Für die Zustandsänderungen wird die Moore-Nachbarschaft verwendet. Die Anwendu
 Am Rand des Gitters werden zwei zusätzliche Zellreihen und -spalten als Puffer geführt. Diese bleiben Wiese und verhindern, dass Tiere von außerhalb des eigentlichen Simulationsfeldes einwandern.
 
 ## Simulationsregeln
-
-Die Regeln lassen sich über die Benutzeroberfläche parametrisieren. In vereinfachter Form umfasst das Modell folgende Prozesse:
 
 ### Geburt
 
@@ -88,80 +86,72 @@ P(Verhungern) = min(P(Zufallstod) × Verhungerungsfaktor, 1)
 - Für Beutetiere liegt Nahrungsmangel vor, wenn keine Wiese in der Umgebung vorhanden ist.
 - Die Reihenfolge von Bewegung und Verhungern kann als Modellannahme verändert werden.
 
-## Installation
+## Anwendung verwenden
 
-Vorausgesetzt wird eine aktuelle Python-Installation. Das Repository kann anschließend geklont und die benötigten Pakete können installiert werden:
+### 1. Anmelden
 
-```bash
-git clone https://github.com/frankmollard/ZellularAutomaten.git
-cd ZellularAutomaten
+Beim Öffnen der Anwendung erscheint zunächst die Anmeldemaske. Benutzername und Passwort werden eingegeben und über die Schaltfläche zum Anmelden bestätigt.
 
-python -m venv .venv
-source .venv/bin/activate
-python -m pip install --upgrade pip
-pip install -r requirements.txt
-```
+Die Anmeldung dient als einfache Zugangsschranke vor der Streamlit-Anwendung. Sie schützt keine vertraulichen Daten. Ein gemeinsamer Demo- oder Gastzugang ist daher für diesen Anwendungsfall ausreichend.
 
-Unter Windows wird die virtuelle Umgebung wie folgt aktiviert:
+Nach erfolgreicher Anmeldung werden die Bedienelemente in der linken Seitenleiste und der Ergebnisbereich im Hauptfenster angezeigt. Über **Logout** kann die Sitzung wieder beendet werden.
 
-```powershell
-.venv\Scripts\activate
-```
+### 2. Nachbarschaft wählen
 
-Zu den wichtigsten Abhängigkeiten gehören:
+Im Auswahlfeld **Moore Umfeld** wird festgelegt, wie viele Nachbarzellen bei der Anwendung der Regeln berücksichtigt werden:
 
-- Streamlit
-- Streamlit Authenticator
-- NumPy
-- pandas
-- Plotly
-- Matplotlib
-- PyYAML
+- **Normal** untersucht acht Nachbarzellen.
+- **Erweitert** untersucht 20 Nachbarzellen.
 
-## Konfiguration der Anmeldung
+Die gewählte Nachbarschaft beeinflusst insbesondere Geburten, Jagd, Bewegung und Nahrungsverfügbarkeit. Ergebnisse unterschiedlicher Nachbarschaften sollten daher nur unter Berücksichtigung dieser Modelländerung verglichen werden.
 
-Die Anwendung verwendet `streamlit-authenticator`. Vor dem Start muss deshalb im Hauptverzeichnis eine Datei `config.yaml` vorhanden sein. Ein vereinfachtes Schema sieht so aus:
+### 3. Grundeinstellungen festlegen
 
-```yaml
-credentials:
-  usernames:
-    beispiel:
-      email: beispiel@example.org
-      name: Beispiel Benutzer
-      password: "$2b$12$..."
+Vor der Simulation werden folgende Grundeinstellungen gewählt:
 
-cookie:
-  expiry_days: 1
-  key: "LANGER_ZUFAELLIGER_GEHEIMER_SCHLUESSEL"
-  name: "zellularautomaten_cookie"
-```
+- **Seed:** steuert die verwendeten Zufallszahlen.
+- **Größe der Matrix:** legt Breite und Höhe des quadratischen Gitters fest.
+- **Anzahl der Simulationsschritte:** bestimmt, wie viele lokale Aktualisierungen ausgeführt werden.
+- **Anteil Jäger und Anteil Beute:** bestimmen die anfängliche Zusammensetzung des Gitters.
 
-Passwörter dürfen nicht im Klartext gespeichert werden. Verwenden Sie ausschließlich sichere Passwort-Hashes und einen zufällig erzeugten Cookie-Schlüssel.
+Für einen reproduzierbaren Vergleich zweier Szenarien sollten Seed, Matrixgröße und Simulationsdauer gleich bleiben. Anschließend wird nur der gezielt zu untersuchende Parameter verändert.
 
-> **Sicherheit:** Eine produktive `config.yaml` mit Benutzerkonten, Passwort-Hashes oder Cookie-Schlüsseln sollte nicht in ein öffentliches Repository eingecheckt werden. Es empfiehlt sich, sie über `.gitignore` auszuschließen und stattdessen eine anonymisierte `config.example.yaml` bereitzustellen. Falls echte Zugangsdaten bereits veröffentlicht wurden, sollten diese unverzüglich ausgetauscht werden.
+Die Summe aus dem anfänglichen Jäger- und Beuteanteil muss unter 100 % liegen. Der verbleibende Anteil wird automatisch als Wiese initialisiert.
 
-## Anwendung starten
+### 4. Verhaltensregeln einstellen
 
-Nach Installation und Konfiguration wird die Anwendung im Repository-Verzeichnis gestartet:
+Danach werden Geburts-, Jagd-, Bewegungs- und Sterberegeln festgelegt. Die Hilfetexte der Bedienelemente erläutern die jeweilige Wirkung.
 
-```bash
-streamlit run ZA_Simulator.py
-```
+Einige Schwellenwerte lassen sich so hoch einstellen, dass die zugehörige Bedingung nicht mehr erreicht werden kann. Dadurch kann eine Regel gezielt deaktiviert werden. Die jeweils maximal sinnvolle Ausprägung hängt davon ab, ob das normale oder das erweiterte Moore-Umfeld gewählt wurde.
 
-Streamlit zeigt anschließend die lokale Adresse der Anwendung an, üblicherweise:
+### 5. Simulation starten
 
-```text
-http://localhost:8501
-```
+Die Simulation wird über **Simulieren** gestartet. Während der Berechnung zeigt die Anwendung einen Fortschrittsbalken und die bereits ausgeführte Anzahl von Simulationsschritten an.
 
-Nach erfolgreicher Anmeldung können die Parameter in der Seitenleiste festgelegt und über **Simulieren** ausgeführt werden.
+Je größer die Matrix und je höher die Zahl der Simulationsschritte, desto länger dauert die Berechnung. Für erste Versuche empfiehlt sich daher eine kleinere Matrix mit einer moderaten Zahl von Iterationen.
 
-## Bedienung und Parameter
+Die Anwendung prüft vor dem Start insbesondere:
+
+- ob die Summe aus Jäger- und Beuteanteil kleiner als 100 % ist;
+- ob die Zahl der Iterationen in einem unterstützten Intervall liegt.
+
+Bei ungültigen Eingaben erscheint eine Fehlermeldung und die Simulation wird nicht ausgeführt.
+
+### 6. Ergebnisse betrachten
+
+Nach Abschluss werden zwei Darstellungen erzeugt:
+
+1. Ein Liniendiagramm zeigt die Entwicklung der prozentualen Anteile von Wiese, Beute und Jägern.
+2. Eine animierte Heatmap zeigt die räumliche Entwicklung des Gitters.
+
+Unterhalb der Darstellungen werden außerdem die aktuellen Parameter den Einstellungen des vorherigen Simulationslaufs gegenübergestellt. Dadurch lassen sich Änderungen zwischen zwei Szenarien nachvollziehen.
+
+## Parameter der Simulation
 
 | Parameter | Bedeutung |
 |---|---|
 | Moore-Umfeld | Auswahl zwischen normaler und erweiterter Nachbarschaft |
-| Seed | Startwert des Zufallszahlengenerators; identische Werte ermöglichen reproduzierbare Läufe |
+| Seed | Startwert des Zufallszahlengenerators für reproduzierbare Läufe |
 | Größe der Matrix | Breite und Höhe des quadratischen Simulationsgitters |
 | Simulationsschritte | Anzahl der lokal ausgeführten Zustandsänderungen |
 | Anteil Jäger | Prozentualer Jägeranteil zu Beginn |
@@ -177,27 +167,104 @@ Nach erfolgreicher Anmeldung können die Parameter in der Seitenleiste festgeleg
 | Verhungern oder Weggehen | Reihenfolge, in der Nahrungsmangel und Bewegung geprüft werden |
 | Beuteschwelle | Beuteanteil, unterhalb dessen Jägergeburten eingeschränkt werden |
 
-Einige Schwellenwerte können auf einen Wert gesetzt werden, der größer als die Zahl der betrachteten Nachbarzellen ist. Die entsprechende Regel kann dadurch faktisch deaktiviert werden.
+## Ergebnisse auswerten
 
-## Ergebnisse
+### Populationsentwicklung
 
-Nach Abschluss einer Simulation erzeugt die Anwendung zwei Visualisierungen:
+Das Liniendiagramm stellt den Anteil jedes Zustands in Prozent dar:
 
-### Entwicklung der Populationen
+- **Grün:** Wiese
+- **Orange:** Beute
+- **Rot:** Jäger
 
-Ein Liniendiagramm zeigt die prozentualen Anteile von:
+Die Darstellung ermöglicht unter anderem die Untersuchung folgender Fragen:
 
-- Wiese
-- Beute
-- Jägern
+- Stabilisieren sich die Populationen?
+- Entstehen wiederkehrende Schwankungen?
+- Stirbt eine Population aus?
+- Wie verändert eine einzelne Parameteränderung das langfristige Verhalten?
 
-über den Verlauf der Simulation. Falls eine Beuteschwelle festgelegt wurde, wird sie zusätzlich eingezeichnet.
+Wenn eine Beuteschwelle verwendet wird, erscheint diese zusätzlich als Orientierungslinie.
 
 ### Räumliche Entwicklung
 
-Eine animierte Plotly-Heatmap zeigt die Verteilung der drei Zellzustände auf dem Gitter. Über den Schieberegler kann die räumliche Entwicklung schrittweise betrachtet werden. Tooltips zeigen Position und Zustand einer Zelle.
+Die animierte Heatmap zeigt ausgewählte Zwischenstände der Simulation. Der Schieberegler kann verwendet werden, um einzelne Frames direkt anzusteuern. Über die Wiedergabeschaltfläche lässt sich die Entwicklung als Animation abspielen.
 
-Zusätzlich vergleicht die Anwendung die aktuellen Eingaben mit den Parametern des vorherigen Simulationslaufs.
+Beim Bewegen des Mauszeigers über eine Zelle zeigt ein Tooltip:
+
+- die x-Position,
+- die y-Position,
+- den Zustand der Zelle.
+
+Damit können neben der Gesamtentwicklung auch räumliche Muster, lokale Gruppenbildungen und Ausbreitungsprozesse untersucht werden.
+
+### Szenarien sinnvoll vergleichen
+
+Für einen kontrollierten Vergleich sollte jeweils nur ein Parameter verändert werden. Ein typisches Vorgehen ist:
+
+1. Basisszenario mit festem Seed simulieren.
+2. Ergebnis und Parameter dokumentieren.
+3. Einen ausgewählten Parameter ändern.
+4. Simulation erneut ausführen.
+5. Populationsverlauf und räumliche Entwicklung vergleichen.
+
+Der feste Seed sorgt dabei für identische anfängliche Zufallsbedingungen. Unterschiede lassen sich dadurch besser auf die gezielte Parameteränderung zurückführen.
+
+## Installation und lokaler Start
+
+Vorausgesetzt wird eine aktuelle Python-Installation:
+
+```bash
+git clone https://github.com/frankmollard/ZellularAutomaten.git
+cd ZellularAutomaten
+
+python -m venv .venv
+source .venv/bin/activate
+python -m pip install --upgrade pip
+pip install -r requirements.txt
+```
+
+Unter Windows wird die virtuelle Umgebung so aktiviert:
+
+```powershell
+.venv\Scripts\activate
+```
+
+Anschließend wird die Anwendung gestartet:
+
+```bash
+streamlit run ZA_Simulator.py
+```
+
+Streamlit zeigt danach die lokale Adresse an, üblicherweise:
+
+```text
+http://localhost:8501
+```
+
+## Anmeldung
+
+Die Anwendung verwendet `streamlit-authenticator`. Die Datei `config.yaml` enthält die Benutzerkonten und die Cookie-Konfiguration.
+
+Da die Anmeldung hier lediglich verhindern soll, dass die App ohne vorgeschaltete Login-Seite vollständig offen ist, kann ein gemeinsamer Gastzugang verwendet werden. Es werden keine vertraulichen Daten geschützt.
+
+Ein vereinfachtes Konfigurationsbeispiel:
+
+```yaml
+credentials:
+  usernames:
+    gast:
+      email: gast@example.org
+      name: Gast
+      password: "$2b$12$..."
+
+cookie:
+  expiry_days: 1
+  key: "COOKIE_SCHLUESSEL"
+  name: "zellularautomaten_cookie"
+```
+
+Das Passwort wird als von `streamlit-authenticator` erzeugter Hash gespeichert. Wenn die Anwendung über Streamlit Community Cloud direkt aus GitHub bereitgestellt wird, muss `config.yaml` im Repository vorhanden sein oder alternativ über Streamlit Secrets bereitgestellt werden. Wird die Datei durch `.gitignore` ausgeschlossen, steht sie bei einem neuen Cloud-Deployment nicht automatisch zur Verfügung.
 
 ## Aufbau des Repositories
 
@@ -216,13 +283,11 @@ ZellularAutomaten/
 |---|---|
 | `ZA_Simulator.py` | Streamlit-Oberfläche, Modellregeln, Simulation und Visualisierung |
 | `requirements.txt` | Python-Abhängigkeiten |
-| `config.yaml` | Konfiguration der Anmeldung |
+| `config.yaml` | Konfiguration der einfachen Anmeldemaske |
 | `.streamlit/config.toml` | Streamlit-Konfiguration |
 | `vawiaial.png` | In der Seitenleiste angezeigte Grafik |
 
 ## Technische Umsetzung
-
-Die zentralen Funktionen sind:
 
 | Funktion | Aufgabe |
 |---|---|
@@ -242,14 +307,13 @@ Zur Begrenzung des Speicherbedarfs werden nicht sämtliche Zwischenzustände ges
 ## Hinweise und Grenzen
 
 - Das Modell ist eine abstrahierte Simulation und keine empirisch kalibrierte Vorhersage realer Ökosysteme.
-- Die Ergebnisse hängen stark von den gewählten Regeln, Wahrscheinlichkeiten und Anfangsbedingungen ab.
+- Die Ergebnisse hängen stark von Regeln, Wahrscheinlichkeiten und Anfangsbedingungen ab.
 - Größere Gitter und sehr viele Iterationen erhöhen Laufzeit und Speicherbedarf.
 - Ein identischer Seed ermöglicht nur dann einen sinnvollen Vergleich, wenn auch die übrigen Parameter und die Programmversion unverändert bleiben.
-- Die Randzellen sind dauerhaft als Wiese definiert; das Modell verwendet daher keine periodischen Randbedingungen.
+- Die Randzellen sind dauerhaft als Wiese definiert; das Modell verwendet keine periodischen Randbedingungen.
 - Die Simulation aktualisiert zufällig ausgewählte lokale Umgebungen nacheinander und nicht alle Zellen gleichzeitig.
 
 ## Autor
 
 Frank Mollard  
 [LinkedIn](https://www.linkedin.com/in/frank-mollard/)
-
